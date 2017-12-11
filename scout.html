@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>scout 信控程序 &mdash; WingNut 1.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="索引"
+              href="genindex.html"/>
+        <link rel="search" title="搜索" href="search.html"/>
+    <link rel="top" title="WingNut 1.0 文档" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> WingNut
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cplusplus.html">C和C++复习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mysql.html">mysql使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclipse.html">eclipse使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">工具推荐</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">问题排查</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gdbAnddbx.html">gdb与dbx使用简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="myinstall.html">一些软件的安装与使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-unix-command.html">linux/unix 命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">我收藏的一些技术网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forums.html">一些技术论坛</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WingNut</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>scout 信控程序</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/scout.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="scout">
+<h1>scout 信控程序<a class="headerlink" href="#scout" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>基本相关<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>程序功能</dt>
+<dd><ul class="first last simple">
+<li>scout_acct      对单个账户操作，开机停机</li>
+<li>scout_stop      停机</li>
+<li>scout_start     开机</li>
+<li>scout_pre       预开户转正</li>
+<li>scout_warning   暂时没用</li>
+<li>scout_crontab   信控时间费用延期</li>
+<li>scout_special   对某些本地成功但交换上失败的操作</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>信控程序部署</dt>
+<dd><p class="first">更换程序时请先备份程序和lib库。</p>
+<p>程序部署在130.31.1.228/puinv01，也没有准线网，所以开发就在这台机器上编译，代码在/unibss/pkginv1/puinv01/src/scout/src，编译完成后，直接make install就会把lib和可执行程序copy到正确的地方。</p>
+<p>编译代码时建议make clean再make install，否则肯会遇到错误（尤其是头文件有变化时，makefile写的不好，头文件依赖没有加进去，看一下gcc -MM相关的知识就知道为什么了）。</p>
+<p>先备份库和可执行文件。
+库：libscout.so
+可执行文件</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>scout_pre</li>
+<li>scout_start</li>
+<li>scout_stop</li>
+<li>scout_special</li>
+<li>scout_crontab</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>信控代码路径(cvs上)</dt>
+<dd><p class="first">products/shbss30/scout</p>
+<p class="last">信控代码没有测试分支，只有开发分支，由开发在自己开发环境中开发测试完成，在现网相应目录下更新代码编译部署。现网路径需要自搜索一下，或者找相关维护人员了解。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>信控启动命令</dt>
+<dd><ul class="first last simple">
+<li>scout_pre -n 10</li>
+<li>scout_start -n 10</li>
+<li>scout_stop -n 30</li>
+<li>scout_special -n 3</li>
+<li>scout_crontab -r -c 5 300</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">杀死信控程序的命令,使用前先确认下有没有问题，会不会误杀其他程序:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ps</span> <span class="o">-</span><span class="n">ef</span><span class="o">|</span><span class="n">grep</span> <span class="n">scout</span><span class="o">|</span><span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="n">grep</span><span class="o">|</span><span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="n">crm2scout</span><span class="o">|</span><span class="n">awk</span> <span class="s1">&#39;{print $2}&#39;</span><span class="o">|</span><span class="n">xargs</span> <span class="n">kill</span> <span class="o">-</span><span class="mi">9</span>
+</pre></div>
+</div>
+</li>
+<li><dl class="first docutils">
+<dt>日志在</dt>
+<dd><p class="first last">/unibss/pkginv1/puinv01/log/scout</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">信控程序正常应该如下,总共54个进程:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">puinv01</span>  <span class="mi">2547748</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">2</span><span class="p">:</span><span class="mi">02</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">8396840</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">58</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">6541574</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">57</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">2363792</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">2</span><span class="p">:</span><span class="mi">02</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">1561276</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">58</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">8770200</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">3</span><span class="p">:</span><span class="mi">21</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">3933046</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">59</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">6750834</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">57</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">9274284</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">3</span><span class="p">:</span><span class="mi">36</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">7529306</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">2</span><span class="p">:</span><span class="mi">01</span> <span class="n">scout_pre</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+
+
+<span class="n">puinv01</span>  <span class="mi">8081844</span>        <span class="mi">1</span>   <span class="mi">3</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">45</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">6910268</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">55</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">6537368</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">13</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">8057050</span>        <span class="mi">1</span>   <span class="mi">4</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">50</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>   <span class="mi">742122</span>        <span class="mi">1</span>   <span class="mi">2</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">35</span><span class="p">:</span><span class="mi">15</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>   <span class="mi">946902</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">32</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">8303316</span>        <span class="mi">1</span>   <span class="mi">6</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">47</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">3699312</span>        <span class="mi">1</span>   <span class="mi">6</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">75</span><span class="p">:</span><span class="mi">40</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">9446380</span>        <span class="mi">1</span>   <span class="mi">3</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">05</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+<span class="n">puinv01</span>  <span class="mi">9741230</span>        <span class="mi">1</span>   <span class="mi">4</span>   <span class="n">Nov</span> <span class="mi">01</span>      <span class="o">-</span> <span class="mi">30</span><span class="p">:</span><span class="mi">50</span> <span class="n">scout_start</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span>
+
+
+<span class="n">puinv01</span>   <span class="mi">110646</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">26</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">2470110</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">03</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">6377702</span>        <span class="mi">1</span>   <span class="mi">7</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">35</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">7327886</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">43</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">7520396</span>        <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">02</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">8270070</span>        <span class="mi">1</span>   <span class="mi">3</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">47</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">9703530</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">35</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">3354964</span>        <span class="mi">1</span>   <span class="mi">3</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">24</span><span class="p">:</span><span class="mi">08</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">4903252</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">45</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">5730786</span>        <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">15</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">6361368</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">08</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">7909736</span>        <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">26</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">9056606</span>        <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">05</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">9339236</span>        <span class="mi">1</span>   <span class="mi">3</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">36</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">9400702</span>        <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">54</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>    <span class="mi">53970</span>        <span class="mi">1</span>   <span class="mi">7</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">01</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>   <span class="mi">983692</span>        <span class="mi">1</span>   <span class="mi">6</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">03</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">3121866</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">03</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">3732024</span>        <span class="mi">1</span>   <span class="mi">0</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">08</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">3777260</span>        <span class="mi">1</span>   <span class="mi">6</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">40</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">6410930</span>        <span class="mi">1</span>   <span class="mi">8</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">05</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">7602924</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">51</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">2495282</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">20</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">4244440</span>        <span class="mi">1</span>   <span class="mi">6</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">58</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">4768584</span>        <span class="mi">1</span>   <span class="mi">5</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">21</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">5948342</span>        <span class="mi">1</span>   <span class="mi">0</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">05</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">6792016</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">24</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">7594916</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">23</span><span class="p">:</span><span class="mi">05</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">8586064</span>        <span class="mi">1</span>   <span class="mi">6</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">21</span><span class="p">:</span><span class="mi">44</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+<span class="n">puinv01</span>  <span class="mi">9151304</span>        <span class="mi">1</span>   <span class="mi">4</span> <span class="mi">00</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">54</span>      <span class="o">-</span> <span class="mi">22</span><span class="p">:</span><span class="mi">23</span> <span class="n">scout_stop</span> <span class="o">-</span><span class="n">n</span> <span class="mi">30</span>
+
+
+<span class="n">puinv01</span>  <span class="mi">8979308</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">15</span> <span class="n">scout_special</span> <span class="o">-</span><span class="n">n</span> <span class="mi">3</span>
+<span class="n">puinv01</span>  <span class="mi">3191756</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">17</span> <span class="n">scout_special</span> <span class="o">-</span><span class="n">n</span> <span class="mi">3</span>
+<span class="n">puinv01</span>  <span class="mi">9556128</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">1</span><span class="p">:</span><span class="mi">13</span> <span class="n">scout_special</span> <span class="o">-</span><span class="n">n</span> <span class="mi">3</span>
+
+
+<span class="n">puinv01</span>  <span class="mi">8885150</span>        <span class="mi">1</span>   <span class="mi">0</span>   <span class="n">Oct</span> <span class="mi">20</span>      <span class="o">-</span>  <span class="mi">0</span><span class="p">:</span><span class="mi">41</span> <span class="n">scout_crontab</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">c</span> <span class="mi">5</span> <span class="mi">300</span>
+</pre></div>
+</div>
+</li>
+<li><dl class="first docutils">
+<dt>scout代码分析</dt>
+<dd><p class="first last">信控是用来ACE的框架来写的。程序在putq()函数就是发送信控动作的地方，getq()就是接受消息的地方。svc()函数是业务开始的地方。动作(插停开机接口表scout_bms_interface)是在类ScoutExecutor中执行的。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>scout 触发来源</dt>
+<dd><p class="first">沃信用分调整会写real_scout_crminfo，crm2scout程序会扫这个表，同步给real_sco_event（内存库），信控程序会扫描这张表，触发动作。</p>
+<p>缴费开机会写acc_event_notify表，触发信控动作。</p>
+<p class="last">还有其他来源。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>scout_bms_interface表</dt>
+<dd><p class="first last">信控开机停机会写这张接口表，缴费程序开机其实也会写这张表。bms_ps_main扫描这张表，更新用户状态ucs_subscription。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>几张重要的表</dt>
+<dd><ul class="first last">
+<li><p class="first">信控触发表 real_sco_event SCO_FLAG=0，则触发信控。crm2scout会更新SCO_FLAG，触发信控。:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">real_sco_event</span><span class="p">(</span><span class="n">ACCOUNT_ID</span><span class="p">,</span><span class="n">EVENT_TYPE</span><span class="p">,</span><span class="n">CREDIT_VALUE</span><span class="p">,</span><span class="n">LAST_REAL_FEE</span><span class="p">,</span><span class="n">FUZZY_BALANCE</span><span class="p">,</span><span class="n">SCOUT_THRESHOLD</span><span class="p">,</span><span class="n">INSERT_TIMESTAMP</span><span class="p">,</span><span class="n">SCO_FLAG</span><span class="p">,</span><span class="n">SCO_TIMESTAMP</span><span class="p">,</span><span class="n">REGION_ID</span><span class="p">)</span> <span class="n">values</span><span class="p">(</span><span class="mi">338981321</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">19450</span><span class="p">,</span><span class="o">-</span><span class="mi">11240</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;20161226183005&#39;</span><span class="p">,</span><span class="s1">&#39;yyyymmddhh24miss&#39;</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;20161226183005&#39;</span><span class="p">,</span><span class="s1">&#39;yyyymmddhh24miss&#39;</span><span class="p">),</span><span class="s1">&#39;A&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">信控规则表 ucs_credit_action</p>
+</li>
+<li><p class="first">营业停开机规则 bms_act_rule，这张表配置了用户从一种状态转化到另一种状态是否可行，如果没有配置，则转化是不可行的。</p>
+</li>
+<li><p class="first">信控规则表 ucs_credit ,和ucs_credit_action一起组成信控规则</p>
+</li>
+<li><p class="first">计算哪些信用分配置表 ucs_credit_item</p>
+</li>
+<li><p class="first">用户信用额度表 INFO_USER_CREDIT，用户的沃信用分就在这张表中配置。</p>
+</li>
+<li><p class="first">ucs_account内存表,测试的时候可能测试环境内存库没有相关账户，会导致失败，需要加上</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">ucs_account</span>
+  <span class="p">(</span><span class="n">ACCOUNT_ID</span><span class="p">,</span>
+   <span class="n">PAY_TYPE</span><span class="p">,</span>
+   <span class="n">ACCT_TYPE</span><span class="p">,</span>
+   <span class="n">ACCOUNT_CYCLE</span><span class="p">,</span>
+   <span class="n">SUBS_MASK</span><span class="p">,</span>
+   <span class="n">ACCOUNT_STATUS</span><span class="p">,</span>
+   <span class="n">CAN_STOP</span><span class="p">,</span>
+   <span class="n">CREDIT_VALUE</span><span class="p">,</span>
+   <span class="n">CREDIT_FEE</span><span class="p">,</span>
+   <span class="n">CREATE_DATE</span><span class="p">,</span>
+   <span class="n">LAST_CHG_DATE</span><span class="p">,</span>
+   <span class="n">REGION_ID</span><span class="p">,</span>
+   <span class="n">IS_GROUP</span><span class="p">)</span>
+<span class="n">values</span>
+  <span class="p">(</span><span class="mi">56064778</span><span class="p">,</span>
+   <span class="mi">10</span><span class="p">,</span>
+   <span class="mi">1</span><span class="p">,</span>
+   <span class="mi">0</span><span class="p">,</span>
+   <span class="mi">5</span><span class="p">,</span>
+   <span class="mi">1</span><span class="p">,</span>
+   <span class="mi">0</span><span class="p">,</span>
+   <span class="mi">0</span><span class="p">,</span>
+   <span class="mi">0</span><span class="p">,</span>
+   <span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;01-01-2000&#39;</span><span class="p">,</span> <span class="s1">&#39;dd-mm-yyyy&#39;</span><span class="p">),</span>
+   <span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;01-01-2000&#39;</span><span class="p">,</span> <span class="s1">&#39;dd-mm-yyyy&#39;</span><span class="p">),</span>
+   <span class="s1">&#39;A&#39;</span><span class="p">,</span>
+   <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">重要函数 scout、doBusiness、scoutByCredit</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; 版权所有 2017, zyj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+scout 信控程序
+================
+
+基本相关
+---------------
+	* 程序功能
+		* scout_acct      对单个账户操作，开机停机
+		* scout_stop      停机
+		* scout_start     开机
+		* scout_pre       预开户转正
+		* scout_warning   暂时没用
+		* scout_crontab   信控时间费用延期
+		* scout_special   对某些本地成功但交换上失败的操作
+		
+	* 信控程序部署
+		更换程序时请先备份程序和lib库。
+	
+		程序部署在130.31.1.228/puinv01，也没有准线网，所以开发就在这台机器上编译，代码在/unibss/pkginv1/puinv01/src/scout/src，编译完成后，直接make install就会把lib和可执行程序copy到正确的地方。
+		
+		编译代码时建议make clean再make install，否则肯会遇到错误（尤其是头文件有变化时，makefile写的不好，头文件依赖没有加进去，看一下gcc -MM相关的知识就知道为什么了）。
+		
+		先备份库和可执行文件。
+		库：libscout.so
+		可执行文件
+		
+			* scout_pre
+			* scout_start
+			* scout_stop
+			* scout_special
+			* scout_crontab
+			
+	* 信控代码路径(cvs上)
+		products/shbss30/scout
+		
+		信控代码没有测试分支，只有开发分支，由开发在自己开发环境中开发测试完成，在现网相应目录下更新代码编译部署。现网路径需要自搜索一下，或者找相关维护人员了解。
+	
+	* 信控启动命令
+		* scout_pre -n 10 
+		* scout_start -n 10
+		* scout_stop -n 30 
+		* scout_special -n 3 
+		* scout_crontab -r -c 5 300
+		
+	* 杀死信控程序的命令,使用前先确认下有没有问题，会不会误杀其他程序::
+	
+		ps -ef|grep scout|grep -v grep|grep -v crm2scout|awk '{print $2}'|xargs kill -9
+	
+	* 日志在
+		/unibss/pkginv1/puinv01/log/scout
+	
+	* 信控程序正常应该如下,总共54个进程::
+	
+		puinv01  2547748        1   0   Oct 20      -  2:02 scout_pre -n 10 
+		puinv01  8396840        1   0   Oct 20      -  1:58 scout_pre -n 10 
+		puinv01  6541574        1   0   Oct 20      -  1:57 scout_pre -n 10 
+		puinv01  2363792        1   0   Oct 20      -  2:02 scout_pre -n 10 
+		puinv01  1561276        1   0   Oct 20      -  1:58 scout_pre -n 10 
+		puinv01  8770200        1   0   Oct 20      -  3:21 scout_pre -n 10 
+		puinv01  3933046        1   0   Oct 20      -  1:59 scout_pre -n 10 
+		puinv01  6750834        1   0   Oct 20      -  1:57 scout_pre -n 10 
+		puinv01  9274284        1   0   Oct 20      -  3:36 scout_pre -n 10 
+		puinv01  7529306        1   0   Oct 20      -  2:01 scout_pre -n 10 
+		
+		
+		puinv01  8081844        1   3   Nov 01      - 30:45 scout_start -n 10 
+		puinv01  6910268        1   0   Nov 01      - 30:55 scout_start -n 10 
+		puinv01  6537368        1   0   Nov 01      - 30:13 scout_start -n 10 
+		puinv01  8057050        1   4   Nov 01      - 30:50 scout_start -n 10 
+		puinv01   742122        1   2   Nov 01      - 35:15 scout_start -n 10 
+		puinv01   946902        1   0   Nov 01      - 30:32 scout_start -n 10 
+		puinv01  8303316        1   6   Nov 01      - 30:47 scout_start -n 10 
+		puinv01  3699312        1   6   Nov 01      - 75:40 scout_start -n 10 
+		puinv01  9446380        1   3   Nov 01      - 30:05 scout_start -n 10 
+		puinv01  9741230        1   4   Nov 01      - 30:50 scout_start -n 10
+		
+		
+		puinv01   110646        1   5 00:53:54      - 22:26 scout_stop -n 30 
+		puinv01  2470110        1   4 00:53:54      - 22:03 scout_stop -n 30 
+		puinv01  6377702        1   7 00:53:54      - 22:35 scout_stop -n 30 
+		puinv01  7327886        1   5 00:53:54      - 22:43 scout_stop -n 30 
+		puinv01  7520396        1   2 00:53:54      - 22:02 scout_stop -n 30 
+		puinv01  8270070        1   3 00:53:54      - 22:47 scout_stop -n 30 
+		puinv01  9703530        1   4 00:53:54      - 21:35 scout_stop -n 30 
+		puinv01  3354964        1   3 00:53:54      - 24:08 scout_stop -n 30 
+		puinv01  4903252        1   4 00:53:54      - 21:45 scout_stop -n 30 
+		puinv01  5730786        1   2 00:53:54      - 23:15 scout_stop -n 30 
+		puinv01  6361368        1   4 00:53:54      - 22:08 scout_stop -n 30 
+		puinv01  7909736        1   2 00:53:54      - 22:26 scout_stop -n 30 
+		puinv01  9056606        1   2 00:53:54      - 23:05 scout_stop -n 30 
+		puinv01  9339236        1   3 00:53:54      - 22:36 scout_stop -n 30 
+		puinv01  9400702        1   2 00:53:54      - 21:54 scout_stop -n 30 
+		puinv01    53970        1   7 00:53:54      - 23:01 scout_stop -n 30 
+		puinv01   983692        1   6 00:53:54      - 23:03 scout_stop -n 30 
+		puinv01  3121866        1   5 00:53:54      - 23:03 scout_stop -n 30 
+		puinv01  3732024        1   0 00:53:54      - 22:08 scout_stop -n 30 
+		puinv01  3777260        1   6 00:53:54      - 22:40 scout_stop -n 30 
+		puinv01  6410930        1   8 00:53:54      - 22:05 scout_stop -n 30 
+		puinv01  7602924        1   5 00:53:54      - 21:51 scout_stop -n 30 
+		puinv01  2495282        1   5 00:53:54      - 22:20 scout_stop -n 30 
+		puinv01  4244440        1   6 00:53:54      - 21:58 scout_stop -n 30 
+		puinv01  4768584        1   5 00:53:54      - 22:21 scout_stop -n 30 
+		puinv01  5948342        1   0 00:53:54      - 22:05 scout_stop -n 30 
+		puinv01  6792016        1   4 00:53:54      - 22:24 scout_stop -n 30 
+		puinv01  7594916        1   4 00:53:54      - 23:05 scout_stop -n 30 
+		puinv01  8586064        1   6 00:53:54      - 21:44 scout_stop -n 30 
+		puinv01  9151304        1   4 00:53:54      - 22:23 scout_stop -n 30 
+		
+		
+		puinv01  8979308        1   0   Oct 20      -  1:15 scout_special -n 3 
+		puinv01  3191756        1   0   Oct 20      -  1:17 scout_special -n 3 
+		puinv01  9556128        1   0   Oct 20      -  1:13 scout_special -n 3 
+		
+		 
+		puinv01  8885150        1   0   Oct 20      -  0:41 scout_crontab -r -c 5 300 
+		
+		
+	* scout代码分析
+		信控是用来ACE的框架来写的。程序在putq()函数就是发送信控动作的地方，getq()就是接受消息的地方。svc()函数是业务开始的地方。动作(插停开机接口表scout_bms_interface)是在类ScoutExecutor中执行的。
+		
+	* scout 触发来源
+		沃信用分调整会写real_scout_crminfo，crm2scout程序会扫这个表，同步给real_sco_event（内存库），信控程序会扫描这张表，触发动作。
+		
+		缴费开机会写acc_event_notify表，触发信控动作。
+		
+		还有其他来源。
+		
+	* scout_bms_interface表
+		信控开机停机会写这张接口表，缴费程序开机其实也会写这张表。bms_ps_main扫描这张表，更新用户状态ucs_subscription。
+
+	* 几张重要的表
+		* 信控触发表 real_sco_event SCO_FLAG=0，则触发信控。crm2scout会更新SCO_FLAG，触发信控。::
+			
+			insert into real_sco_event(ACCOUNT_ID,EVENT_TYPE,CREDIT_VALUE,LAST_REAL_FEE,FUZZY_BALANCE,SCOUT_THRESHOLD,INSERT_TIMESTAMP,SCO_FLAG,SCO_TIMESTAMP,REGION_ID) values(338981321,0,0,19450,-11240,0,to_date('20161226183005','yyyymmddhh24miss'),1,to_date('20161226183005','yyyymmddhh24miss'),'A');
+			
+		* 信控规则表 ucs_credit_action
+		
+		* 营业停开机规则 bms_act_rule，这张表配置了用户从一种状态转化到另一种状态是否可行，如果没有配置，则转化是不可行的。
+		
+		* 信控规则表 ucs_credit ,和ucs_credit_action一起组成信控规则
+		
+		* 计算哪些信用分配置表 ucs_credit_item
+		
+		* 用户信用额度表 INFO_USER_CREDIT，用户的沃信用分就在这张表中配置。
+		
+		* ucs_account内存表,测试的时候可能测试环境内存库没有相关账户，会导致失败，需要加上 ::
+		
+			insert into ucs_account
+			  (ACCOUNT_ID,
+			   PAY_TYPE,
+			   ACCT_TYPE,
+			   ACCOUNT_CYCLE,
+			   SUBS_MASK,
+			   ACCOUNT_STATUS,
+			   CAN_STOP,
+			   CREDIT_VALUE,
+			   CREDIT_FEE,
+			   CREATE_DATE,
+			   LAST_CHG_DATE,
+			   REGION_ID,
+			   IS_GROUP)
+			values
+			  (56064778,
+			   10,
+			   1,
+			   0,
+			   5,
+			   1,
+			   0,
+			   0,
+			   0,
+			   to_date('01-01-2000', 'dd-mm-yyyy'),
+			   to_date('01-01-2000', 'dd-mm-yyyy'),
+			   'A',
+			   0);
+
+	* 重要函数 scout、doBusiness、scoutByCredit

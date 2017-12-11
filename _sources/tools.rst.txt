@@ -1,0 +1,159 @@
+==========
+工具推荐
+==========
+
+STL错误解码器
+=============
+	#.	STLFilt
+		这玩意帮你把编译错误转换成人能识别的自然语言,我还没用过。
+
+代码阅读
+==========
+	* **understand**
+
+		可以方便的根据函数名，代码文件，宏，类等跳转到相应位置，还有全局搜索功能，
+		以及显示调用函数的上一层函数等功能。并且只要你机器内存够大（建议8G及以上），
+		分析好几个G的文件也可以。而且该工具还有linux版本。缺点是有时候不是很准，
+		对于多个不同目录的同名文件，跳转链会错，并且有些时候对于类跳不过去，可以
+		重新分析全部文件，或许会改善，或者对特定的目录建立工程，排除其他目录。
+
+
+
+	* **sourceinsight**
+
+		这个工具也可以用来看代码，功能基本同上，但使用过程中还是觉得上一个更好用，
+		而且sourceinsight有时候创建大工程后关闭打开另外的工程时会莫名卡死。
+
+	* **slickedit**
+
+		这个工具也可以用来看代码，编辑文件，只是使用说明比较少，不怎么会用。但这工
+		具逆天的地方是居然AIX，solaris的版本，不过你基本没机会用到这几个系统上的它。
+		公司的AIX上是没有的。
+
+	* **sourceNavigator**
+
+		redhat公司开发，linux和win平台，真不怎么好用，但是免费。
+
+	 * **eclipse**
+
+	 	免费。查看代码也比较方便。
+
+	 * **doxygen**
+
+	 	可以用它分析源代码生成html的说明文档。开源产品。
+
+	 * **opengrok**
+
+	 	也是个看代码的工具，主要用浏览器看，开源产品，但搭建有点麻烦，折腾好
+	 	久，到本文写作时还没搭建成功。
+
+代码对比工具
+==============
+	* **beyondcompare**
+
+		这个工具对比代码很强大，可以边对比边合并，可以通过ftp对比本地-服务器、
+		服务器-服务器上的代码。
+
+	* **ultraeditcompare**
+
+		这个工具也很不错，功能同上，但还是beyondcompare方便一点。
+
+文本编辑器
+==============
+	* **ultraedit**
+	* **ultrastudio**
+	* **slickedit**
+
+	这4个编辑器都可以通过ftp编辑远程服务器上的文件。其他的一些如notepad++，EverEdit
+	等等，需要ftp插件，有这样那样的问题，公司里使用ultraedit/ultrastudio最方便了。
+
+代码格式化工具
+==============
+	* **astyle**
+
+版本管理
+==============
+wincvs1.3
+---------------------
+我用的版本，图标类似一只小黄鱼。
+
+subversion
+---------------------
+		#.	ubuntu 安装 ``sudo apt-get install subversion``
+
+		#.	查看版本 ``svnserve --version``
+
+		#.	启动服务 ``svnserve -d`` 或 ``svnserve -d -r dir``
+
+		#.	建立项目 ``svnadmin create mobile`` 位置在当前登录用户所在目录下
+
+		#.	常用svn命令
+
+				#.	checkout(co): ``svn co url --username user --password password``
+
+				#.	update(up): 进入到需要更新的目录, ``svn up``
+
+				#.	commit(ci): 进入需要提交的目录，输入：``svn ci -m "comments"``
+
+				#.	add: 进入需要提交的目录，输入：``svn add filename or path``,添加完之后需要用commit命令提交。另外，在vi中也可以不退出编辑的文件来提交文件，使用shell命令：``:! svn ci -m "commit info"`` 。
+
+    			#.	查看文件或者目录状态: ``svn status path`` （目录下的文件和子目录的状态，正常状态不显示）?：不在svn的控制中；M：内容被修改；C：发生冲突；A：预定加入到版本库；K：被锁定.  显示文件和子目录状态 ``svn st -v path``。
+
+    			#.	删除文件: ``svn delete path -m "delete test fl"`` ,或者直接 ``svn delete test.php`` 然后再 ``svn ci -m "delete test file"`` ，推荐使用这种。简写：svn (del, remove, rm) 。
+
+    			#.	查看日志: ``svn log path(filename)``
+
+    			#.	比较差异: ``svn diff -r m:n path`` (对版本m和版本n比较差异) ,例如：``svn diff -r 200:201 test.php``.
+
+    			#.	版本库下的文件和目录列表: ``svn list(ls) path``
+
+
+
+画图软件
+=============
+	#.	GrafEq
+	
+	#.	WolframAlpha
+	
+	#.	MetaPost
+	
+	#.	graphviz
+	
+	#.	visio
+	
+	#.	Mathematica
+	
+	#.	matlab
+	
+	#.	asymptote
+	
+	
+
+虚拟机
+==============
+	* **vbox**
+		挺好用的。
+
+邮箱软件
+==============
+	* **foxmail**
+
+文档写作工具
+==============
+	* **sphinx**
+
+	本文就是用这个软件写作并生成的。支持HTML，PDF输出格式。pdf需要安装texlive。
+
+	* **texlive**
+
+		大名鼎鼎的软件tex，推荐下载texlive20XX，可以生成漂亮的pdf文件，不过推荐用
+		上面的sphinx就可以了。
+
+	* **texstudio**
+		latex的IDE，支持预览你，用着感觉还可以。
+
+	* **texworks**
+		另一个latex的IDE
+
+综上，我自己觉得understand阅读代码最方便，ultraedit编辑文件比较方便，beyondcompare
+对比最方便。推荐这个搭配。

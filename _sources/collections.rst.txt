@@ -1,0 +1,12 @@
+=============================
+我收藏的一些技术网站
+=============================
+
+金步国作品集_
+=============================
+	.. _金步国作品集: http://www.jinbuguo.com/
+	
+QuickreStructuredText_
+=============================
+	.. _QuickreStructuredText: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+

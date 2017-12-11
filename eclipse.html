@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>eclipse使用手册 &mdash; WingNut 1.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="索引"
+              href="genindex.html"/>
+        <link rel="search" title="搜索" href="search.html"/>
+    <link rel="top" title="WingNut 1.0 文档" href="index.html"/>
+        <link rel="next" title="工具推荐" href="tools.html"/>
+        <link rel="prev" title="mysql使用手册" href="mysql.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> WingNut
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cplusplus.html">C和C++复习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mysql.html">mysql使用手册</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">eclipse使用手册</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#eclipsejdk">eclipse配置JDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">设置编译版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">针对某个项目设置编译版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jdbcmysql">项目添加JDBC连接mysql数据库</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">方法1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">方法2</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classjdk">查看class文件的jdk版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">开启eclipse的代码自动格式化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">工具推荐</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">问题排查</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gdbAnddbx.html">gdb与dbx使用简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="myinstall.html">一些软件的安装与使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-unix-command.html">linux/unix 命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">我收藏的一些技术网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forums.html">一些技术论坛</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WingNut</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>eclipse使用手册</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/eclipse.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="eclipse">
+<h1>eclipse使用手册<a class="headerlink" href="#eclipse" title="永久链接至标题">¶</a></h1>
+<div class="section" id="eclipsejdk">
+<h2>eclipse配置JDK<a class="headerlink" href="#eclipsejdk" title="永久链接至标题">¶</a></h2>
+<p>打开window–&gt;preferences，弹出的页面里选择java–&gt;Installed JREs，然后点击右侧add按钮，打开add jre对话框，点击下一步，打开jre路径选择对话框。选择JRE home之后，自动会填充JRE name和下面的jar，这里也可以设置vm参数，一般直接点击finish完成即可。到此新的JRE已经配置完成，如果配置了多个JDK，可以勾选一个作为默认。</p>
+</div>
+<div class="section" id="id1">
+<h2>设置编译版本<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>打开window–&gt;preferences，弹出的页面里选择java–&gt;Compiler，右侧可以选择编译的版本号，默认情况下，编译版本和你配置的JDK版本一致。这里设置的编译版本影响eclipse中所有的项目(项目没有单独配置，使用eclipse默认的情况下)</p>
+</div>
+<div class="section" id="id2">
+<h2>针对某个项目设置编译版本<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>右键–&gt;Properties–&gt;Java Compiler，勾选上Enable project specific settings，之后便可以针对该项目进行配置，注意这里的配置是针对某个项目，会覆盖掉上面eclipse的全局配置，eclipse将以这里的为准。</p>
+</div>
+<div class="section" id="jdbcmysql">
+<h2>项目添加JDBC连接mysql数据库<a class="headerlink" href="#jdbcmysql" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h3>方法1<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<blockquote>
+<div><ol class="arabic simple">
+<li>在新建的Project中右键新建Floder</li>
+<li>创建名为lib的包</li>
+<li>接下来解压你下载的mysql的jar包(名字类似mysql-connector-java-5.1.44-bin.jar)，拷贝的.jar文件到lib目录下，在mysql的jar包上右键选择 build path - add to build path，添加完毕之后，工程才与Mysql的jar包关联起来，现在可以使用相关类和方法了。</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h3>方法2<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<blockquote>
+<div><ol class="arabic simple">
+<li>右键点击：TestProject—&gt;build Path–Configure build Path–&gt;Libraries—&gt;add external Archiver，选择jdbc驱动jar包就好了。</li>
+<li>成果后可以看到左侧目录新增了一个Referenced Libraries目录，mysql connector jar包就在那。</li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="classjdk">
+<h2>查看class文件的jdk版本<a class="headerlink" href="#classjdk" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><p>使用UltraEdit或Editplus以16进制打开class文件，只看第一行数据，前面8个字节CA FE BA BE 是固定的，之后4个字节00 00 是次版本号，次版本号后面的4个字节00 33  是jdk的版本号，比如使用的是jdk1.8:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>00000000h: CA FE BA BE 00 00 00 34 00 C4 07 00 02 01 00 20 ; 漱壕...4.?....
+00000010h: 63 6F 6D 2F 66 65 69 79 61 6E 67 65 64 75 2F 73 ; com/feiyangedu/s
+00000020h: 61 6D 70 6C 65 2F 4A 64 62 63 53 65 6C 65 63 74 ; ample/JdbcSelect
+00000030h: 07 00 04 01 00 10 6A 61 76 61 2F 6C 61 6E 67 2F ; ......java/lang/
+00000040h: 4F 62 6A 65 63 74 01 00 08 4A 44 42 43 5F 55 52 ; Object...JDBC_UR
+00000050h: 4C 01 00 12 4C 6A 61 76 61 2F 6C 61 6E 67 2F 53 ; L...Ljava/lang/S
+00000060h: 74 72 69 6E 67 3B 01 00 0D 43 6F 6E 73 74 61 6E ; tring;...Constan
+00000070h: 74 56 61 6C 75 65 08 00 09 01 00 5C 6A 64 62 63 ; tValue.....\jdbc
+</pre></div>
+</div>
+<p>jdk版本号对应关系如下：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>2E</td>
+<td>46</td>
+<td>jdk1.2</td>
+</tr>
+<tr class="row-even"><td>2F</td>
+<td>47</td>
+<td>jdk1.3</td>
+</tr>
+<tr class="row-odd"><td>30</td>
+<td>48</td>
+<td>jdk1.4</td>
+</tr>
+<tr class="row-even"><td>31</td>
+<td>49</td>
+<td>jdk1.5</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>50</td>
+<td>jdk1.6</td>
+</tr>
+<tr class="row-even"><td>33</td>
+<td>51</td>
+<td>jdk1.7</td>
+</tr>
+<tr class="row-odd"><td>34</td>
+<td>52</td>
+<td>jdk1.8</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h2>开启eclipse的代码自动格式化<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div>Project → Properties →Java Code Style →Formatter</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tools.html" class="btn btn-neutral float-right" title="工具推荐" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mysql.html" class="btn btn-neutral" title="mysql使用手册" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; 版权所有 2017, zyj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

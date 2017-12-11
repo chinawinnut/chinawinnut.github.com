@@ -1,0 +1,29 @@
+.. WingNut documentation master file, created by
+   sphinx-quickstart on Mon Sep  4 06:54:37 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to WingNut's documentation!
+===================================
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   cplusplus
+   mysql
+   eclipse
+   tools
+   problems
+   gdbAnddbx
+   myinstall
+   linux-unix-command
+   collections
+   forums
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

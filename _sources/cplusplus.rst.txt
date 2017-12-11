@@ -1,0 +1,1428 @@
+===========================
+C和C++复习
+===========================
+
+
+C和C++语言基础
+===========================
+
+内存布局
+----------
+	32位系统布局:
+
+		+-----------------------+----+
+		|     kernel space      | 1G |
+		+-----------------------+----+
+		|  environment variable |    |
+		+-----------------------+    |
+		| command line arguments|    |
+		+-----------------------+    |
+		|stack 函数参数,局部变量|    |
+		+-----------------------+    |
+		|        mmap           |    |
+		+-----------------------+ 3G |
+		|        heap           |    |
+		+-----------------------+    |
+		|        bss            |    |
+		+-----------------------+    |
+		|        data           |    |
+		+-----------------------+    |
+		|        text           |    |
+		+-----------------------+----+
+
+	64位系统布局:
+		和32位系统差不多。
+
+	rodata段(C常量字符串和#define定义的常量),rodata段在存储的文件中，不过程序加载后我认为在内存中::
+
+		const char p = "hello";
+
+左值与右值
+-----------------------------
+	在C++中，可以放到赋值操作符=左边的是左值，可以放到赋值操作符右边的是右值。有些变量既可以当左值又可以当右值。进一步来讲，左值为Lvalue，其实L代表Location，表示在内存中可以寻址，可以给它赋值（常量const类型也可以寻址，但是不能赋值），Rvalue中的R代表Read，就是可以知道它的值。在C++中，临时对象不能作为左值，但是可以作为常量引用const &。
+	右值：不能被赋值也不能被修改。
+
+define的用法
+-----------------------------
+	::
+	
+		#define MAX 10
+		#define MAX(a,b) ((a) > (b) ? (a) : (b))
+		
+		#define XNAME(n) x##n
+		int XNAME(4) = 1；
+		int x4 = 1;// 这也就体现出了##对其左右部分（即左x和右4）的拼接作用，最终拼接成x4
+		
+		#define B(x) #x			//B(1)就是"1"
+
+		#define debug(...) printf(__VA_ARGS__)			//可变参数宏，'...'指可变参数
+		
+extern关键字
+-----------------------------
+	extern是一个关键字，它告诉编译器存在着一个变量或者一个函数，如果在当前编译语句的前面中没有找到相应的变量或者函数，也会在当前文件的后面或者其它文件中定义
+
+	c++文件中使用c文件中的函数变量时需::
+
+		extern "C"
+		{
+			void func();
+			int i;
+		}
+
+	在一个源文件里定义了一个数组 ``char a[6];``
+
+　　在另外一个文件里用下列语句进行了声明 ``extern char *a``
+
+　　请问，这样可以吗？
+　	答案与分析：
+
+　　1)、不可以，程序运行时会告诉你非法访问。原因在于，指向类型T的指针并不等价于类型T的数组。 ``extern char *a`` 声明的是一个指针变量而不是字符数组，因此与实际的定义不同，从而造成运行时非法访问。应该将声明改为 ``extern char a[ ]`` 。
+
+volatile关键字
+-----------------------------
+	volatile是给编译器的指示来说明对它所修饰的对象不应该执行优化，编译器将不会把它保存到寄存器中，而是每一次都去访问内存
+	中实际保存该变量的位置上。
+
+
+	visit Volatile_Analysis_
+
+	.. _Volatile_Analysis: _static/htmlfiles/volatile/C_C++_Volatile_Analysis.html
+
+
+mutable关键字
+-----------------------------
+
+static关键字
+-----------------------------
+	static主要用于改变生命期和限制作用域,关键字 static 的符号永远不会是可链接的，即该符号只能是本文件内可见，另一个.o文件都无法使用，更不用说.so文件和可执行文件了。
+
+	#.	static 变量
+
+		#.	文件范围的变量，只初始化一次，生存期是程序的整个生命周期，并且本文件内的函数均可以访问。
+
+		#.	函数体内的变量，只初始化一次，生存周期也是程序的整个生命周期，只是只能被包含它的函数作用域内的代码访问，
+			并且该变量的值不会因为函数终止而丢失。
+
+	#.	static 普通函数
+			限制函数本文件内可见，其他文件无法调用该函数。
+
+	#.	类的static成员
+			static关键字只出现在类内部的声明语句中。表示属于一个类而不是属于此类的任何特定对象的变量和函数，这里的static既不是限定作用域的, 也不是扩展生存期的作用, 而是指示变量/函数在此类中的唯一性。
+
+			#.	类的静态成员变量
+				静态数据成员的类型可以是它所属的类类型，而且这种类型的对象在动态库加载到内存时已经构造完成了::
+
+					class Bar {
+					public:
+						//...
+					private:
+						static Bar mem1;//正确，静态成员可以是不完全类型
+						Bar* mem2;//正确，指针成员可以是不完全类型
+						Bar mem3;//错误，普通数据成员必须是完全类型
+					};
+
+				静态数据成员在类内部声明，在类外部定义初始化。不过也有例外::
+
+					class gamePlayer {
+						private:
+							static const int Num = 5;//常量声明式
+							int scores[Num];//使用该常量
+					};
+
+				上面代码中的静态数据成员初始化是声明式(通常int ，char，bool)，如果代码中不需要再使用可以不需要提供定义式，但通常提供比较好::
+
+					const int gamePlayer::Num;//定义处，Num声明时已获得初值。
+
+
+
+			#.	静态成员函数在类内部声明（或定义），但如果是在类外定义，不能带ststic关键字。类的静态成员函数不包含this指针,不能声明成const：
+
+				这是C++的规则，const修饰符用于表示函数不能修改成员变量的值，该函数必须是含有this指针的类成员函数，函数调用方式为thiscall，
+				而类中的static函数本质上是全局函数，调用规约是__cdecl或__stdcall,不能用const来修饰它。一个静态成员函数访问的值是其参数、静态
+				数据成员和全局变量，而这些数据都不是对象状态的一部分。而对成员函数中使用关键字const是表明：函数不会修改该函数访问的目标对象
+				的数据成员。既然一个静态成员函数根本不访问非静态数据成员，那么就没必要使用const了。
+
+enum
+-----------------------------
+	如果编译器不支持上面的静态常量类内赋初值而又需要定义数组，可以使用enum的方式::
+
+		class gamePlayer {
+			private:
+				enum { Num = 5 };
+				int scores[Num];//使用该常量
+		};
+		
+	定义枚举变量
+		#. 第一种方式::
+		
+			enum DAY {
+				MON=1, TUE, WED, THU, FRI, SAT, SUN
+			};
+			enum DAY day;
+			
+		#. 第二种方式::
+		
+			enum DAY {	//此处DAY可以省略，这样就是匿名枚举
+				MON=1, TUE, WED, THU, FRI, SAT, SUN
+			} day;
+			
+		#. 第三种方式::
+		
+			typedef enum DAY {//此处DAY可以省略，这样就是匿名枚举
+				MON=1, TUE, WED, THU, FRI, SAT, SUN
+			} DAY;// //此处的DAY为枚举型enum DAY的别名
+			DAY today, tomorrow;
+			//或者这样
+			typedef enum DAY1 {
+				MON=1, TUE, WED, THU, FRI, SAT, SUN
+			};
+			DAY1 today;
+			
+		
+
+
+const限定符
+-----------------------------
+	#.	const对象
+
+		const修饰的对象定义时就需要初始化 ``const int a = 10;`` ，并且之后不能修改其值。正常情况下文件中定义的const对象无法被外部文件访问，当多个文件中出现同名const对象时，其实是分别定义了独立的变量。除非使用以下写法::
+
+			extern const int a = 10;//a.c中定义
+
+			extern const int a;//b.c中使用
+
+	#.	const引用::
+
+			int a = 10;
+			const int& ai = a;//允许一个常量引用绑定一个非常量的对象
+
+			const int& ri = ai*2;//允许一个常量引用绑定一个非常量的表达式
+
+			const int& ci = 10;//允许一个常量引用绑定一个非常量的字面值
+
+			const int b = 10;
+			const int& bi = b;
+
+			double dval = 3.14;
+			const int& ri = dval;//这种引用也是可以的，实际上ri绑定了编译器创建的一个临时变量{const int temp = dval;const int& ri = temp;}
+			但如果是非常量引用上述就不成立了。毕竟你想修改dval可绑定的却是一个临时变量，没有意义不是吗。
+
+	#. const指针
+
+		指向常量的指针::
+
+			int a = 10;
+			const int* p =&a;//指的是指针p指向一个常量，不能通过指针修改它
+			int const *pa = &a;//指的是指针p指向一个常量，不能通过指针修改它
+
+		常量指针::
+
+			int *const pa =&a;//const修饰的是指针变量，表示pa的值不能修改，而a的值可以通过其他方式修改
+
+			const int* const p =&a;//既不能修改a的值也不能修改p的值。
+
+	#.	形参和实参::
+
+			void print(const string& s);
+			void print(const char* str);
+			//以上两种传参可以避免在函数内部修改传进来的参数，而且避免了传值需要付出的构造临时对象需要的代价
+
+			而且，传引用可以实现多态，避免参数被切割，以下是错误的情况::
+
+				class A {
+				public:
+					virtual void print();
+
+				};
+				class B:public A {
+				public:
+					virtual void print();
+				}
+				void Print(A obj);//如果传入的是B的对象，实际上会被切割成A的对象。
+
+	#.	const函数返回值::
+
+			const Rational operator*(const Rational& lhs,const Rational& rhs);//如果不这么用，可能出现下面的错误
+			Rational a,b,c;
+			...
+			(a*b) = c;//诸如此类错误用法
+
+	#. const成员函数
+		两个成员函数如果只是常量性不同，是可以被重载的。在C++中，只有被声明为const的成员函数才能被一个const类对象调用。
+		要声明一个const类型的类成员函数，只需要在成员函数参数列表后加上关键字const::
+
+			class Screen {
+			public:
+			   char get() const;
+			};
+
+			char Screen::get() const { //若将成员成员函数声明为const，则该函数不允许修改类的数据成员。但如果返回非const引用或传入的指针指向的值其实有可能改变，编译器检查不出来。
+			   return _screen[_cursor];
+			}
+
+		但是，如果据成员是指针，则const成员函数并不能保证不修改指针指向的对象，编译器不会把这种修改检测为错::
+
+			class B {
+			public:
+				B(char* p)  {str = p; };
+				~B(){
+					str = NULL;
+				};
+				char* str;
+
+				char& get(int position) const {
+					return str[position];
+				}
+
+				void display(){
+					cout<<str<<endl;
+				}
+			};
+
+			//main.cpp
+			char str1[] = "nnnnnn";
+			B b(str1);
+			b.get(3) = 'b';
+			b.display();//结果是nnnbnn
+
+		由于两个成员函数如果只是常量性不同，是可以被重载的，所以可以利用这点减少代码重复::
+
+			class TextBlock {
+				public:
+					...
+					const char& operator[] (std::size_t pos) const {
+						...
+						return text[pos];
+					}
+
+					char& operator[] (std::size_t pos) {
+						return const_cast<char&>(
+									static_cast<const TextBlock&>(*this)[pos]
+								);
+					}
+					...
+			};
+
+explicit
+-----------------------------
+	explicit防止类构造函数的隐式自动转换，explicit关键字只对有一个参数的类构造函数有效, 如果类构造函数参数大于或等于两个时,
+	是不会产生隐式转换的, 所以explicit关键字也就无效了。但是, 也有一个例外, 就是当除了第一个参数以外的其他参数都有默认值的
+	时候, explicit关键字依然有效, 此时, 当调用构造函数时只传入一个参数, 等效于只有一个参数的类构造函数
+
+
+typename,class(本节内容来自伯乐在线，作者：Hunk Shi)
+----------------------------------------------------------
+	#.	用在模板定义里, 标明其后的模板参数是类型参数::
+
+			template<typename T, typename Y>
+			T foo(const T& t, const Y& y){//....};
+
+			templace<typename T>
+			class CTest
+			{
+			private:
+			 T t;
+			public:
+			 //...
+			}
+
+		其实，这里最常用的是使用关键字class，而且二者功能完全相同，这里的class和定义类时的class完全是两回事
+	#.	模板中标明“内嵌依赖类型名”
+
+		这里有三个词，内嵌、依赖、类型名。那么什么是“内嵌依赖类型名
+
+		请看SGI STL里的一个例子, 只是STL中count范型算法的实现::
+
+			template <class _InputIter, class _Tp>
+			typename iterator_traits<_InputIter>::difference_type
+			count(_InputIter __first, _InputIter __last, const _Tp& __value) {
+			 __STL_REQUIRES(_InputIter, _InputIterator);
+			 __STL_REQUIRES(typename iterator_traits<_InputIter>::value_type,
+			         _EqualityComparable);
+			 __STL_REQUIRES(_Tp, _EqualityComparable);
+			 typename iterator_traits<_InputIter>::difference_type __n = 0;
+			 for ( ; __first != __last; ++__first)
+			  if (*__first == __value)
+			   ++__n;
+			 return __n;
+			}
+
+		这里有三个地方用到了typename：返回值、参数、变量定义。分别是::
+
+			typename iterator_traits<_InputIter>::difference_type
+			typename iterator_traits<_InputIter>::value_type
+			typename iterator_traits<_InputIter>::difference_type __n = 0;
+
+		difference_type， value_type就是依赖于_InputIter（模板类型参数）的类型名。源码如下::
+
+			template <class _Iterator>
+			struct iterator_traits {
+			 typedef typename _Iterator::iterator_category iterator_category;//此处typename必须要有
+			 typedef typename _Iterator::value_type    value_type;
+			 typedef typename _Iterator::difference_type  difference_type;
+			 typedef typename _Iterator::pointer      pointer;
+			 typedef typename _Iterator::reference     reference;
+			};
+
+		内嵌是指定义在类名的定义中的。以上difference_type和value_type都是定义在iterator_traits中的。
+
+		依赖是指依赖于一个模板参数。 typename iterator_traits::difference_type中difference_type依赖于模板参数_InputIter。
+
+		类型名是指这里最终要指出的是个类型名，而不是变量。例如iterator_traits::difference_type完全有可能是类iterator_traits 类里的一个static对象。而且当我们这样写的时候，C＋＋默认就是解释为一个变量的。所以，为了和变量区分，必须使用typename告诉编译器。
+
+		那么是不是所有的T::type_or_variable, 或者tmpl:type_or_variable都需要使用typename呢？不是，有以下两个例外::
+
+			//类模板定义中的基类列表::
+			template<class T>
+			class Derived: public Base<T>::XXX
+			{
+			  ...
+			}
+
+			//类模板定义中的初始化列表
+			Derived(int x) : Base<T>::xxx(x)
+			{
+			  ...
+			}
+
+		为什么这里不需要呢？因为编译器知道这里需要的是类型还是变量，（1）基类列表里肯定是类型名，（2）初始化列表里肯定是成员变量名。
+
+	#.	typename和class的区别
+
+		在c++ Template中很多地方都用到了typename与class这两个关键字，而且好像可以替换，是不是这两个关键字完全一样呢?
+
+		相信学习C++的人对class这个关键字都非常明白，class用于定义类，在模板引入c++后，最初定义模板的方法为： template<class T>……
+
+		在这里class关键字表明T是一个类型，后来为了避免class在这两个地方的使用可能给人带来混淆，所以引入了typename这个关键字，它的作用同
+
+		class一样表明后面的符号为一个类型，这样在定义模板的时候就可以使用下面的方式了：
+
+		template<typename T>……
+
+		在模板定义语法中关键字class与typename的作用完全一样。
+
+		typename难道仅仅在模板定义中起作用吗？其实不是这样，typename另外一个作用为：使用嵌套依赖类型(nested depended name)，如下所示::
+
+			class MyArray
+			{
+			  public：
+			  typedef int LengthType;
+			  .....
+			}
+
+			template<class T>
+			void MyMethod( T myarr )
+			{
+			  typedef typename T::LengthType LengthType;
+			  LengthType length = myarr.GetLength;
+			}
+
+		这个时候typename的作用就是告诉c++编译器，typename后面的字符串为一个类型名称，而不是成员函数或者成员变量，这个时候如果前面没有typename，编译器没有任何办法知道T::LengthType是一个类型还是一个成员名称(静态数据成员或者静态函数)，所以编译不能够通过。
+
+		以上这种情况只能使用typename，毕竟T::LengthType实际上是个int类型，如果用class总不合适吧（by myself）。
+
+virtual
+-----------------------------
+
+c++继承的三种方式
+-----------------------------
+	class默认是private继承，struct默认public继承。
+	
+	继承规则::
+
+		class Base {
+		public:
+		    int a;
+		protected:
+		    int b;
+		private:
+		    int c;
+		};
+		//-----------------------------------------------------------------
+		class A : public Base {
+		  public:
+		    void print() {
+		        cout<<a<<endl;//OK,基类的公共成员在派生类中为公共成员，派生类内部可访问
+		        cout<<b<<endl;//OK,基类的保护成员在派生类中为保护成员，派生类内部可访问
+		        //cout<<c<<endl;//Error,基类中私有成员在派生类中是不可见
+		    }
+		};
+		class B : protected Base {
+		  public:
+		    void print() {
+		        cout<<a<<endl;//OK,基类的公共成员在派生类中为保护成员，派生类内部可访问
+		        cout<<b<<endl;//OK,基类的保护成员在派生类中为保护成员，派生类内部可访问
+		        //cout<<c<<endl;//Error,基类中私有成员在派生类中是不可见
+		    }
+		};
+		class C : private Base {
+		  public:
+		    void print() {
+		        cout<<a<<endl;//OK,基类的公共成员在派生类中为私有成员，派生类内部可访问
+		        cout<<b<<endl;//OK,基类的保护成员在派生类中为私有成员，派生类内部可访问
+		        //cout<<c<<endl;//Error,基类中私有成员在派生类中是不可见
+		    }
+		};
+
+		int main()
+		{
+		    A a;//public继承
+		    a.a;//基类的公共成员在派生类中为公共成员，对对象可见
+		    //a.b;//基类的保护成员在派生类中为保护成员，对对象不可见
+		    //a.c;//基类中私有成员在派生类中是不可见的,对对象不可见
+
+		    B b;//protected继承
+		    //b.a;//基类的公共成员在派生类中为保护成员，对对象不可见
+		    //b.b;//基类的保护成员在派生类中为保护成员，对对象不可见
+		    //b.c;//基类中私有成员在派生类中是不可见,对对象不可见
+
+		    C c;//private继承
+		    //c.a;//基类的公共成员在派生类中为私有成员，对对象不可见
+		    //c.b;//基类的保护成员在派生类中为私有成员，对对象不可见
+		    //c.c;//基类中私有成员在派生类中是不可见,对对象不可见
+
+		    return 0;
+		}
+
+	+--------------+----------+-------------+-----------+
+	| 基类成员类型 |**public**|**protected**|**private**|
+	+--------------+----------+-------------+-----------+
+	|public继承    |public    |protected    |不可见     |
+	+--------------+----------+-------------+-----------+
+	|protected继承 |protected |protected    |不可见     |
+	+--------------+----------+-------------+-----------+
+	|private继承   |private   |private      |不可见     |
+	+--------------+----------+-------------+-----------+
+
+引用
+-----------------------------
+	对引用取地址实际上得到的地址与绑定的对象相同::
+
+		int num = 10;
+		int& ai = num;
+		printf("&num = %p, &ai = %p\n",&num,&ai);
+		//结果是：&num = 0x7ffd8d2bff34, &ai = 0x7ffd8d2bff34，两者相同。
+
+	不能建立数组的引用。因为数组是一个由若干个元素所组成的集合，所以无法建立一个数组的别。
+
+
+友元类和友元函数
+-----------------------------
+	成员函数有this指针，而友元函数没有this指针。
+
+深复制和浅复制，深拷贝与浅拷贝
+--------------------------------
+	深复制和浅复制与深拷贝与浅拷贝其实是同一个意思。
+
+	**深拷贝**：当对象中含有指针域的时候，在进行对象之间初始化（也就是调用拷贝构造函数）或者是=操作的时候（注：浅两者是不同的情况），将指针所包含的内存空间中的内容也进行拷贝
+
+	**浅拷贝**：当对象中含有指针域的时候，在进行对象之间初始化（也就是调用拷贝构造函数）或者是=操作的时候（注：浅两者是不同的情况），单纯将指针的值（也就是所指内存空间的首地址）拷贝，这就导致两个对象的指针域是同一块内存，所以在对象生存周期完毕时，调用析构函数，释放内存的时候出现core dump的情况！
+
+	**原因分析**：因为C++提供的默认拷贝构造函数和=操作都是浅拷贝操作，即只是将指针域进行值复制。
+
+	**解决方法**：重写默认拷贝构造函数 和 重载=操作符
+
+成员访问符
+-----------------------------
+
+
+++i和i++
+-----------------------------
+	#.	i++是先使用i再++，而++i是先++再使用i，通常如果i是对象，那++i的效率要高于i++
+
+	#.	前置递增/递减运算符，前置运算符应该返回引用::
+
+			T& T::operator++() {
+				//some operations
+				return *this;
+			}
+
+			T& T::operator--() {
+				//some operations
+				return *this;
+			}
+
+	#.	后置递增/递减运算符，后置运算符应该返回值，而非引用::
+
+			T& T::operator++(int) {
+				T ret = *this;
+				++*this;
+				return ret;
+			}
+
+			T& T::operator--() {
+				T ret = *this;
+				--*this;
+				return ret;
+			}
+
+	#.	友元函数方式的重载
+
+			+-------+-----------------------------------+
+			|前置++ |friend T& operator++(T& obj)       |
+			+-------+-----------------------------------+
+			|前置-- |friend T& operator--(T& obj)       |
+			+-------+-----------------------------------+
+			|后置++ |friend T& operator++(T& obj, int)  |
+			+-------+-----------------------------------+
+			|后置-- |friend T& operator--(T& obj, int)  |
+			+-------+-----------------------------------+
+
+new和delete，malloc和free
+---------------------------
+
+Placement new
+-----------------------------
+
+
+STL 容器
+-----------------------------
+	如果你需要高效的随即存取，而不在乎插入和删除的效率，使用vector
+
+	如果你需要大量的插入和删除，而不关心随即存取，则应使用list
+
+	如果你需要随即存取，而且关心两端数据的插入和删除，则应使用deque
+
+	#.	pair
+		pair是用来生成特定类型的模板。
+
+		pair常用操作::
+
+			pair<T1,T2> p(v1,v2);//初始化，p是一个成员类型为T1,T2的pair
+			make_pair(v1,v2);//返回一个用v1,v2初始化的pair，类型从v1,v2推断出来。
+			p.first;//返回p的first成员
+			p.second;//返回p的second成员
+
+	#.	string
+
+		#.	几种初始化 string 对象的方式::
+
+				string s1;//默认构造函数 s1 为空串
+				string s2(s1);//将 s2 初始化为 s1 的一个副本
+				string s3("value");//将 s3 初始化为一个字符串字面值副本
+				s1 = s2;//把 s1 内容替换为 s2 的副本,赋值等，如果不需改变则用上面三种方式效率高点
+
+		#.	string Operations::
+
+				s.empty();//如果 s 为空串，则返回 true，否则返回 false。
+				s.size();//返回 s 中字符的个数。size 操作返回的是 string::size_type，是 unsigned 型
+				s[n];//返回 s 中位置为 n 的字符，位置从 0 开始计数
+				s1 + s2;//把 s1 和s2 连接成一个新字符串，返回新生成的字符串，+操作符左右必须有一个string类型
+				s.append(args);//将 args 串接在 s 后面。返回 s 引用
+				s.find();//在 s 中查找 args 的第一次出现
+
+	#.	vector
+
+		#.	初始化 vector 对象的方式::
+
+				vector<T> v1;//vector 保存类型为 T 对象,默认构造函数 v1 为空。
+				vector<T> v2(v1);//v2 是 v1 的一个副本。
+
+		#.	vector Operations::
+
+				v.empty();//如果 v 为空，则返回 true，否则返回 false。
+				v.size();//返回 v 中元素的个数。返回类型为vector<T>::size_type
+				v.push_back(t);//在 v 的末尾增加一个值为 t 的元素。
+				v[n];//返回 v 中位置为 n 的元素
+				v1 = v2;//把 v1 的元素替换为 v2 中元素的副本。
+				clear();//删除容器中的所有元素
+
+				[begin,end)
+				iterator
+					begin();//返回首元素迭代器
+					end();//返回尾元素之后位置的迭代器
+				reverse_iterator
+					rbegin();//返回一个逆序迭代器，它指向容器c的最后一个元素
+					rend();//返回一个逆序迭代器，它指向容器c的第一个元素前面的位置
+				const_iterator
+					cbegin();//返回首元素迭代器
+					cend();//返回尾元素之后位置的迭代器
+				const_reverse_iterator
+					crbegin();//返回首元素迭代器
+					crend();//返回尾元素之后位置的迭代器
+
+	#.	deque 双端队列
+
+	#.	map
+
+		#.	map 的构造函数
+			map<k, v> m;//创建一个名为 m 的空 map 对象，其键和值的类型分别为 k 和 v
+			map<k, v> m(m2);//创建 m2 的副本 m，m 与 m2 必须有相同的键类型和值类型
+
+			map<K, V>::value_type;//一个 pair 类型，它的 first 元素具有 const map<K, V>::key_type 类型，而 second 元素则为 map<K, V>::mapped_type 类型
+
+		#.	map的操作
+			m.find(key);//如果 m 容器中存在按 k 索引的元素，则返回指向该元素的迭代器。如果不存在，则返回超出end迭代器
+			m.erase(key);//删除 m 中键为 k 的元素。返回 size_type 类型的值，表示删除的元素个数
+			m.erase(iter);//删除 iter指向的元素。
+			it->first;//指向key值
+			it->second;//指向second值
+
+		#.	map 插入数据三种方式:
+
+			#.	用insert插入pair数据::
+
+					map<int,string> mapStudent;
+					mapStudent.insert(pair<int,string>(1,"student_one"));
+
+			#.	用insert插入value_type数据::
+
+					map<int,string> mapStudent;
+					mapStudent.insert(map<int,string>::value_type (1,"student_one"));
+
+			#.	用数组插入数据::
+
+					map<int,string> mapStudent;
+					mapStudent[1] = "student_one";
+
+		#.	map 遍历方式::
+
+				map<int,string>::iterator iter;
+				for(iter = mapStudent.begin(); iter != mapStudent.end(); ++iter) {
+					cout<<iter->first<<" "<<iter->second<<endl;
+				}
+
+	#. multimap
+
+
+	#.	set
+		set的iterator和const_iterator都只允许读取set中的元素而不能改变。
+		#.	set 的构造函数::
+
+			set<int> s1;
+			set<int> s1(s2);
+
+		#.	set 插入数据三种方式:
+
+		#.	set操作::
+
+				begin();
+				end();
+				clear();
+				size();
+				empty();
+				erase();
+
+	#. multiset
+
+	#.	list,双向列表
+
+		#.	list的构造函数::
+
+				list<int>a;
+				list<int>a(first, last);  //声明一个列表，其元素的初始值来源于由区间所指定的序列中的元素，first和last是迭代器
+
+		#.	list操作::
+
+				begin();//通过调用list容器的成员函数begin()得到一个指向容器起始位置的iterator，可以调用list容器的end()函数来得到list末端下一位置
+				end();//
+				push_back();//使用list的成员函数push_back和push_front插入一个元素到list中。其中push_back()是从list的末端插入，而push_front()是从list的头部插入
+				push_front();//
+				empty();//
+				clear();//清空list中的所有元素
+				front();//通过front()可以获得list容器中的头部元素，通过back()可以获得list容器的最后一个元素。注意：当list元素为空时，这时候调用front()和back()不会报错。因此在编写程序时，最好先调用empty()函数判断list是否为空，再调用front()和back()函数
+				back();//
+				pop_back();//使用pop_back()可以删掉尾部第一个元素，pop_front()可以删掉头部第一个元素。注意：list必须不为空，如果当list为空的时候调用pop_back()和pop_front()会使程序崩掉
+				pop_front();//
+
+
+
+	#.	迭代器
+
+
+单例模式
+---------
+	单例大约有两种实现方法：懒汉与饿汉。
+	懒汉：故名思义，不到万不得已就不会去实例化类，也就是说在第一次用到类实例的时候才会去实例化，所以上边的经典方法被归为懒汉实现；
+	饿汉：饿了肯定要饥不择食。所以在单例类定义的时候就进行实例化。
+	特点与选择：
+	由于要进行线程同步，所以在访问量比较大，或者可能访问的线程比较多时，采用饿汉实现，可以实现更好的性能。这是以空间换时间。
+	在访问量较小时，采用懒汉实现。这是以时间换空间
+	此处会列出单例模式的一些实现，其中不封是存在问题的。
+
+	要小心copy构造函数和assignment操作符如果自己不定义，编译器会自动生成，所以将拷贝构造和赋值构造定义为private以禁止。
+
+	另外将析构函数声明为private以避免拥有Singleton对象指针者意外删除对象。
+
+	让getInstance()传回引用而非指针可以避免调用端删除对象，传回reference安全些。
+
+	#.	静态实例方式1，存在问题，不推荐::
+
+			class Singleton {
+			public:
+				static Singleton* getInstanceA(){
+					cout<<"getInstanceA"<<endl;
+					return 	&instance;
+				}
+
+				static Singleton& getInstanceB(){
+					cout<<"getInstanceB"<<endl;
+					return 	instance;
+				}
+
+				int DoSomething();
+			private:
+				Singleton() {
+					cout<<"construct Singleton"<<endl;
+				}
+				~Singleton(){cout<<"destroy Singleton"<<endl;}
+				Singleton& operator=(const Singleton&);
+
+				static Singleton instance;
+			};
+			Singleton Singleton::instance;
+
+		这种方式的问题上面的代码不适合放在头文件中，否则如果有多个文件包含该头文件，内存中就有多份Singleton对象。还有就是
+		由于instance是动态初始化的，而c++并未定义期间的初始化顺序，见《Modern C++ Design》的6.2节::
+
+			int global = Singleton::getInstanceA->DoSomething();
+
+		这里global和Singleton谁先谁后未知，如果global先则Singleton::getInstanceA可能传回尚未构造的对象。
+		不过我觉得如果没有以上这种情况的话这倒是个不错的方案。是线程安全的，因为静态初始化在程序开始时，
+		也就是进入主函数之前，由主线程以单线程方式完成了初始化，所以静态初始化实例保证了线程安全性。在性能要
+		求比较高时，就可以使用这种方式，从而避免频繁的加锁和解锁造成的资源浪费。
+
+
+	#.	静态实例方式2，Meyers Singleton::
+
+			class Singleton
+			{
+			public:
+			    static Singleton& Instance()  {          //Instance()作为静态成员函数提供里全局访问点
+			        static Singleton instance;//这么写保证了静态对象的唯一性
+			        return instance;
+			    }
+
+			private:
+			    Singleton();                            //这里将构造，析构，拷贝构造，赋值函数设为私有，杜绝了生成新例
+			    ~Singleton();
+			    Singleton(const Singleton&);
+			    Singleton& operator=(const Singleton&);
+			};
+
+		C++0x之后该实现是线程安全的，有兴趣可以读相关的标准草案（section 6.7），编译器的支持程度不一定，但是G++4.0及以上
+		是支持的。
+
+	#. 静态指针方式,该方式简单但是是线程不安全的::
+
+			class singleton {
+			private:
+				singleton(){};
+				~singleton(){};
+			    static singleton* p;
+			public:
+			    static singleton* instance();
+			};
+
+			singleton* singleton::p = NULL;
+			singleton* singleton::instance()
+			{
+			    if (p == NULL)
+			        p = new singleton();
+			    return p;
+			}
+
+	#.	双检测锁定方式::
+
+			class Singleton
+			{
+			public:
+				static Singleton *GetInstance()
+				{
+					if (m_Instance == NULL )
+					{
+						Lock(); // C++没有直接的Lock操作，请使用其它库的Lock，比如Boost，此处仅为了说明
+						if (m_Instance == NULL )
+						{
+							m_Instance = new Singleton ();
+						}
+						UnLock(); // C++没有直接的Lock操作，请使用其它库的Lock，比如Boost，此处仅为了说明
+					}
+					return m_Instance;
+				}
+
+				static void DestoryInstance()
+				{
+					if (m_Instance != NULL )
+					{
+						delete m_Instance;
+						m_Instance = NULL ;
+					}
+				}
+
+				int GetTest()
+				{
+					return m_Test;
+				}
+
+			private:
+				Singleton(){ m_Test = 0; }
+				static Singleton *m_Instance;
+				int m_Test;
+			};
+
+			Singleton *Singleton ::m_Instance = NULL;
+
+	#. 自带程序结束时自动删除功能的单例::
+
+			class Singleton
+			{
+			public:
+				static Singleton *GetInstance()
+				{
+					return m_Instance;
+				}
+
+				int GetTest()
+				{
+					return m_Test;
+				}
+
+			private:
+				Singleton(){ m_Test = 10; }
+				static Singleton *m_Instance;
+				int m_Test;
+
+				// This is important
+				class GC
+				{
+				public :
+					~GC()
+					{
+						// We can destory all the resouce here, eg:db connector, file handle and so on
+						if (m_Instance != NULL )
+						{
+							cout<< "Here is the test" <<endl;
+							delete m_Instance;
+							m_Instance = NULL ;
+						}
+					}
+				};
+				static GC gc;
+			};
+
+			Singleton *Singleton ::m_Instance = new Singleton();
+			Singleton ::GC Singleton ::gc;
+
+c++虚函数表
+-----------------------------
+
+构造函数
+-----------------------------
+	构造函数调用构造函数,还没验证。
+
+	在构造函数中调用另一个构造函数如果一不注意就会有无限递归的危险，而且构造函数的参数的不同也决定了调用的不同,以下是三种方式:
+
+	#.	C++11支持的一种调用方式。在函数的初始化列表中调用另一个构造函数::
+
+			class Test {
+			public:
+			    Test(int a):Test(a,1) {}; //在初始化列表调用Test(int a,int b)
+			    Test(int a,int b):p(a),q(b) {};
+			    ~Test() {};
+			private:
+			    int p;
+			    int q;
+			};
+
+		这种方法在老点的编译器中可能还不支持。
+
+    #.	用this指针显示调用构造函数::
+
+			class Test {
+			public:
+			    Test() {
+			        this->Test::Test(1);//通过this指针显式调用Test(int a)
+			    }
+			    Test(int a) : p(a) {};
+			    ~Test() {};
+			private:
+			    int p;
+			};
+
+		这种方法一定不能忘记加上作用域，不然编译无法通过！
+
+	#.	在原始内存覆盖::
+
+			class Test {
+			public:
+			    Test() {
+			        new (this) Test(1);
+			    }
+			    Test(int a) : p(a) {}
+			    ~Test() {}
+			private:
+			    int p;
+			};
+
+		使用new (void*p) Type(...)，这种语句的意思是不重新分配内存，而是直接覆盖在原内存上。就本例而言，定义一个Test类型的变量覆盖在this地址指向的内存上。
+
+特殊成员函数
+-----------------------------
+	一个类，只有数据成员时::
+
+		class DataOnly {
+		private:
+		    int  data_;
+		};
+
+		class DataOnly {
+		public:
+		    DataOnly ()                  // default constructor
+		    ~DataOnly ()                 // destructor
+
+		    DataOnly (const DataOnly & rhs)         　 　  // copy constructor
+		    DataOnly & operator=(const DataOnly & rhs)    // copy assignment operator
+
+		    DataOnly (const DataOnly && rhs)         // C++11, move constructor
+		    DataOnly & operator=(DataOnly && rhs)    // C++11, move assignment operator
+		};
+
+	C++98 编译器会隐式的产生四个函数：缺省构造函数，析构函数，拷贝构造函数 和 拷贝赋值算子，它们称为特殊成员函数 (special member function)。在 C++11 中，“特殊成员函数” 还有两个：移动构造函数 和 移动赋值算子。
+
+
+虚函数，纯虚函数
+-----------------------------
+
+静态多态，动态多态
+-----------------------------
+
+智能指针
+-----------------------------
+
+Mutex、条件变量、Spinlock、RWLock
+---------------------------------
+
+C++四种类型转换：static_cast, dynamic_cast, const_cast, reinterpret_cast
+---------------------------------------------------------------------------
+	#.	static_cast
+		最常用的类型转换符，在正常状况下的类型转换，可以实现C++中内置基本数据类型之间的相互转换，enum、struct、 int、char、float等。它不能进行无关类型(如非基类和子类)指针之间的转换。
+		如把int转换为float，如::
+
+			int i;
+			float f;
+			f=（float）i;
+			或者f=static_cast<float>(i);
+
+	#.	const_cast
+		用于取出const属性，把const类型的指针变为非const类型的指针（或引用），如::
+
+			const int *fun(int x,int y){};
+			int *ptr=const_cast<int *>(fun(2,3));
+
+	#.	dynamic_cast
+		它被用于安全地沿着类的继承关系向下进行类型转换。这就是说，你能用 dynamic_cast 把指向基类的指针或引用转换成指向其
+		派生类或其兄弟类的指针或引用，而且你能知道转换是否成功。失败的转换将返回空指针（当对指针进行类型转换时）或者抛出
+		异常（当对引用进行类型转换时）。它不能被用于缺乏虚函数的类型。
+
+		从子类到基类的指针转换dynamic_cast实现效果很好
+
+		虽然dynamic_cast可以实现从基类到子类的转换，但尽量不要如此操作，容易出现问题。
+
+		没有关系的两个类之间的转换最好不要用。
+
+	#.	reinterpret_cast
+		interpret是解释的意思，reinterpret即为重新解释，此标识符的意思即为数据的二进制形式重新解释，但是不改变其值,而且不到万不得已不要使用reinterpret_cast，使 用
+		reinterpret_casts 的代码很难移植。如::
+
+			int i;
+			char *ptr="hello freind!";
+			i=reinterpret_cast<int>(ptr);//这个转换方式很少使用
+
+智能指针
+-----------------------------
+	标准容器不能容纳auto_ptr，这是C++标准特别规定的（读者永远也不要有这种想法）。标准容器也不能容纳scoped_ptr，因为scoped_ptr不能拷贝和赋值
+
+	#.	auto_ptr
+
+		auto_ptr的特性非常危险，并且现在已经被弃用了
+
+	#.	scoped_ptr
+
+	#.	unique_ptr
+
+	#.	shared_ptr
+
+		#.	初始化::
+
+				shared_ptr<T> sp;
+				shared_ptr<T> sp(otherptr);
+				shared_ptr<T> p = make_shared<T>(args);
+				sp = p;
+				sp.reset(new T());
+
+				shared_ptr<T> ptr = new T();//Error,编译器报错
+
+		#.	需注意的问题
+			不要用一个原始指针初始化多个shared_ptr，例如这样::
+
+				int* ptr = new int;
+				shared_ptr<int> p1(ptr);
+				shared_ptr<int> p2(ptr);//logic_error
+
+			不要在函数实参中创建shared_ptr::
+
+				function(shared_ptr<int>(new int),g());//Error,这是因为函数参数计算顺序不一定如你所见，，所以会造成无法预料的结果
+
+				//真确做法
+				shared_ptr<int> p(new int(1));
+				f(p,g());
+
+			避免循环使用,比如有两个类A,B各自含有一个shared_ptr,并且指向对方。
+
+		#.	以下是一份从较旧的shared_ptr版本中改写的shared_ptr::
+
+				template<typename T>
+				class shared_ptr
+				{
+				public:
+				    typedef T element_type;
+
+				    explicit shared_ptr(T* p =0) : px(p) {
+				        try {
+				            pn = new long(1);    // fix: prevent leak if new throws
+				        } catch (...) {
+				            delete p;
+				            throw;
+				        }
+				    }
+				    shared_ptr(const shared_ptr& r) : px(r.px) {
+				        ++*(pn = r.pn);
+				    }
+				    ~shared_ptr() {
+				        dispose();
+				    }
+				    shared_ptr& operator=(const shared_ptr& r) {
+				        share(r.px,r.pn);
+				        return *this;
+				    }
+
+				    void reset(T* p=0) {
+				        if ( px == p ) return;  // fix: self-assignment safe
+
+				        if (--*pn == 0) {
+				            delete px;
+				        } else { // allocate new reference counter
+				            try {
+				                pn = new long;    // fix: prevent leak if new throws
+				            } catch (...) {
+				                ++*pn;  // undo effect of --*pn above to meet effects guarantee
+				                delete p;
+				                throw;
+				            }
+				        } // allocate new reference counter
+
+				        *pn = 1;
+				        px = p;
+				    }
+				    T& operator*() const {
+				        return *px;
+				    }
+				    T* operator->() const {
+				        return px;
+				    }
+				    T* get() const {
+				        return px;
+				    }
+				    long use_count() const {
+				        return *pn;
+				    }
+				    bool unique() const {
+				        return *pn == 1;
+				    }
+				    void swap(shared_ptr<T>& other) {
+				        std::swap(px,other.px);
+				        std::swap(pn,other.pn);
+				    }
+
+				private:
+				    T*     px;     // contained pointer
+				    long*  pn;     // ptr to reference counter
+
+				    void dispose() {
+				        if (--*pn == 0) {
+				            delete px;
+				            delete pn;
+				        }
+				    }
+
+				    void share(T* rpx, long* rpn) {
+				        if (pn != rpn) {
+				            dispose();
+				            px = rpx;
+				            ++*(pn = rpn);
+				        }
+				    }
+				};
+
+	#.	weak_ptr
+
+boost
+-----------------------------
+	#.	boost::noncopyable
+
+	#.	boost::bind
+
+	#.	boost::shared_ptr
+
+	#.	boost::scoped_ptr
+		新代码里不要再使用scoped_ptr
+
+	#.	boost::mutex
+
+	#.	boost::thread
+
+	#.	boost::function
+
+
+
+#pragma once
+-----------------------------
+	#pragma once是一个比较常用的C/C++杂注，只要在头文件的最开始加入这条杂注，就能够保证头文件只被编译一次。但有的编译器支持，有的编译器不支持，最好使用这种方式::
+
+		#ifndef __GUARD_H
+		#define __GUARD_H
+
+		头文件内容
+
+		#endif
+
+内联函数与宏定义的区别
+-------------------------------
+
+内存对齐的原则
+-----------------------------
+
+Memory barrier（内存屏障）
+-----------------------------
+
+定位内存泄露
+-----------------------------
+	#.	Linux下通过工具valgrind检测
+
+
+数据结构与算法
+===========================
+
+排序算法
+-----------------------------
+
+Hash表
+-----------------------------
+
+树
+-----------------------------
+
+	#.	二叉树结构，二叉查找树实现
+
+	#.	二叉树的六种遍历
+
+	#.	二叉树的按层遍历
+
+	#.	递归是解决二叉树相关问题的神级方法
+
+	#.	树的各种常见算法题
+
+	#.	什么是红黑树
+
+	#.	红黑树与AVL树的区别
+
+	#.	Trie树(字典树)
+
+
+链表
+-----------------------------
+
+	#.	链表和插入和删除，单向和双向链表都要会
+
+	#.	链表的问题考虑多个指针和递归
+
+		1.	反向打印链表(递归)
+
+		2.  打印倒数第K个节点(前后指针)
+
+		3.	链表是否有环(快慢指针)等等。
+
+
+
+栈和队列
+-----------------------------
+
+	#.	队列和栈的区别？(从实现，应用，自身特点多个方面来阐述，不要只说一个先入先出，先入后出，这个你会别人也会，要展现出你比别人掌握的更深)
+
+	#.	典型的应用场景
+
+
+海量数据问题
+-----------------------------
+
+布隆过滤器
+-----------------------------
+
+网络与TCP/IP
+===========================
+
+TCP与UDP之间的区别
+-----------------------------
+
+	#.	IP首部，TCP首部，UDP首部
+
+	#.	TCP和UDP区别
+
+	#.	TCP和UDP应用场景
+
+	#.	如何实现可靠的UDP
+
+
+TCP三次握手与四次挥手
+-----------------------------
+
+详细说明TCP状态迁移过程
+--------------------------------
+
+	#. 	三次握手和四次挥手状态变化
+
+	#.	2MSL是什么状态？作用是什么
+
+	#.	三次握手为什么不是两次或者四次
+
+
+TCP相关技术
+--------------------------------
+
+	#.	TCP重发机制，Nagle算法
+
+	#.	TCP的拥塞控制使用的算法和具体过程
+
+	#.	TCP的窗口滑动
+
+TCP客户与服务器模型，用到哪些函数
+----------------------------------
+
+UDP客户与服务器模型，用到哪些函数
+----------------------------------
+
+域名解析过程，ARP的机制，RARP的实现
+-------------------------------------
+
+Ping和TraceRoute实现原理
+----------------------------------
+
+
+HTTP
+------
+
+	#.	http/https 1.0、1.1、2.0的特点和区别
+
+	#.	get/post 区别
+
+	#.	HTTP返回状态码
+
+	#.	http 协议头相关
+
+
+Linux
+=========
+
+动态库
+-------------
+	c++程序编译链接完成后，并不一定就能运行，常常会报动态库找不到，这时候需要
+	
+	#.	编辑/etc/ld.so.conf文件，加入库文件所在目录的路径
+	
+	#.	运行ldconfig ，该命令会重建/etc/ld.so.cache文件
+	
+	一般不会常常这么做，我们可以建立一个固定的目录，下面建立lib、bin等目录，并将lib加入ld.so.conf文件，然后把makefile运行install目标的路径改到这就好了。
+	
+man
+-------------
+	+---+-------------------------------+
+	|1  |用户命令                       |
+	+---+-------------------------------+
+	|2  |系统调用                       |
+	+---+-------------------------------+
+	|3  |C库调用                        |
+	+---+-------------------------------+
+	|4  |设备文件及特殊文件             |
+	+---+-------------------------------+
+	|5  |配置文件格式                   |
+	+---+-------------------------------+
+	|6  |游戏                           |
+	+---+-------------------------------+
+	|7  |杂项                           |
+	+---+-------------------------------+
+	|8  |管理命令及守护进程             |
+	+---+-------------------------------+
+	|9  |Linux内核API（CentOS7以后出现）|
+	+---+-------------------------------+
+
+进程与线程
+-------------
+
+	#.	进程与线程区别
+
+	#.	线程比进程具有哪些优势
+
+	#.	什么时候用多进程？什么时候用多线程
+
+	#.	LINUX中进程和线程使用的几个函数
+
+	#.	线程同步
+
+	#.	孤儿进程
+
+	#.	僵尸进程
+
+	#. 守护进程（daemon）
+		#.	守护进程编写规则
+
+			#.	在编写守护进程程序时需要遵循一些基本规则，以便防止产生并不需要的交互作用。下面先说明这些规则，然后给出一个按照这些规则编写的函数daemonize。
+
+			#.  首先要做的是调用umask将文件模式创建屏蔽字设为0。由继承得来的文件模式创建屏蔽字可能会拒绝设置某些权限。例如，若守护进程要创建一个组可读、写的文件，而继承的文件模式创建屏蔽字可能屏蔽了这两种权限，于是所要求的组可读、写就不能起作用。
+
+			#.  调用fork，然后使父进程退出（exit）。这样做实现下面几点：第一，如果该守护进程是作为一条简单shell命令启动的，那么父进程终止使得 shell认为这条命令已经执行完毕；第二，子进程继承了父进程的进程组ID，但是具有一个新建的进程ID，这就保证了子进程不是一个进程组的组长进程。这对于下面就要做的setsid调用是必要的前提条件。
+
+			#.  调用setsid以创建一个新会话。于是执行三个操作，使调用进程：(a)成为新会话的首进程，(b)成为一个新进程组的组长进程，(c)没有控制终端。
+
+			#.  再次调用fork，使父进程终止。第二个子进程作为守护进程继续运行。这就保证了该守护进程不是会话首进程，于是按照系统V规则可以防止它取得控制终端。避免取得控制终端的另一种方法是，无论何时打开一个终端设备都一定要指定O_NOTTY。
+
+			#.  将当前目录更改为根目录（或其他不会卸载的目录）。从父进程处继承过来的当前工作目录可能在一个装配文件系统中。因为守护进程通常在系统在引导之前是一直存在的，所以如果守护进程的当前工作目录在一个装配文件系统中，那么该文件系统就不能被卸载。这与装配文件系统的原意不符。另外，某些守护进程可能会把当前工作目录更改到某个指定的位置，在那里做它们的工作。例如，行式打印机假脱机守护进程常常将其工作目录更改到它们的spool目录上。
+
+			#.  关闭不再需要的文件描述符。这使守护进程不再持有从父进程继承来的某些文件描述符（父进程可能是shell进程，或某个其他进程）。可以使用sysconf()函数或getrlimit函数来判定最高文件描述符值，并关闭直到该值的所有描述符。
+
+			#.  某些守护进程打开/dev/null使其具有文件描述符0、1和2，这样，任何一个试图读取标准输入、标准输出或标准出错的库例程都不会产生任何效果。因为守护进程并不与终端设备相关联，所以不能在终端设备上显示其输出，也无处从交互式用户那里接收输入。即使守护进程是从交互式会话启动的，但因为守护进程是在后台运行的，所以登录会话的终止并不影响守护进程。如果其他用户在同一终端设备上登录，我们也不会在该终端上见到守护进程的输出，用户也不期望他们在终端上的输入会由守护进程读取。
+
+
+进程池，线程池，内存池
+--------------------------
+
+IO模型
+-----------
+
+	#.	五种IO模型：阻塞IO，非阻塞IO，IO复用，信号驱动式IO，异步IO
+
+	#.	select，poll，epoll的区别
+
+
+设计模式
+============
+
+	#.	单例模式线程安全的写法
+
+	#.	STL里的迭代器模式，适配器模式
+
+数据库
+=========
+	#.	SQL语言(内外连接，子查询，分组，聚集，嵌套，逻辑)
+
+安全相关
+=========
+	#.	SQL注入
+
+	#.	APR欺骗
+
+	#.	SYN洪水攻击
+
+
+
+目录整理自 Oscarwin 的知乎回答

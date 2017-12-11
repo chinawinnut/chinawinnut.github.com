@@ -1,0 +1,71 @@
+=================
+eclipse使用手册
+=================
+
+
+eclipse配置JDK
+================
+打开window–>preferences，弹出的页面里选择java–>Installed JREs，然后点击右侧add按钮，打开add jre对话框，点击下一步，打开jre路径选择对话框。选择JRE home之后，自动会填充JRE name和下面的jar，这里也可以设置vm参数，一般直接点击finish完成即可。到此新的JRE已经配置完成，如果配置了多个JDK，可以勾选一个作为默认。
+
+
+
+设置编译版本
+================
+打开window–>preferences，弹出的页面里选择java–>Compiler，右侧可以选择编译的版本号，默认情况下，编译版本和你配置的JDK版本一致。这里设置的编译版本影响eclipse中所有的项目(项目没有单独配置，使用eclipse默认的情况下)
+
+
+
+针对某个项目设置编译版本
+=============================
+右键–>Properties–>Java Compiler，勾选上Enable project specific settings，之后便可以针对该项目进行配置，注意这里的配置是针对某个项目，会覆盖掉上面eclipse的全局配置，eclipse将以这里的为准。
+
+
+项目添加JDBC连接mysql数据库
+=============================
+
+方法1
+-------------
+	#.	在新建的Project中右键新建Floder
+	#.	创建名为lib的包
+	#.	接下来解压你下载的mysql的jar包(名字类似mysql-connector-java-5.1.44-bin.jar)，拷贝的.jar文件到lib目录下，在mysql的jar包上右键选择 build path - add to build path，添加完毕之后，工程才与Mysql的jar包关联起来，现在可以使用相关类和方法了。
+
+方法2
+-------------
+	#.	右键点击：TestProject--->build Path--Configure build Path-->Libraries--->add external Archiver，选择jdbc驱动jar包就好了。
+	#.	成果后可以看到左侧目录新增了一个Referenced Libraries目录，mysql connector jar包就在那。
+
+查看class文件的jdk版本
+=============================
+	使用UltraEdit或Editplus以16进制打开class文件，只看第一行数据，前面8个字节CA FE BA BE 是固定的，之后4个字节00 00 是次版本号，次版本号后面的4个字节00 33  是jdk的版本号，比如使用的是jdk1.8::
+	
+		00000000h: CA FE BA BE 00 00 00 34 00 C4 07 00 02 01 00 20 ; 漱壕...4.?.... 
+		00000010h: 63 6F 6D 2F 66 65 69 79 61 6E 67 65 64 75 2F 73 ; com/feiyangedu/s
+		00000020h: 61 6D 70 6C 65 2F 4A 64 62 63 53 65 6C 65 63 74 ; ample/JdbcSelect
+		00000030h: 07 00 04 01 00 10 6A 61 76 61 2F 6C 61 6E 67 2F ; ......java/lang/
+		00000040h: 4F 62 6A 65 63 74 01 00 08 4A 44 42 43 5F 55 52 ; Object...JDBC_UR
+		00000050h: 4C 01 00 12 4C 6A 61 76 61 2F 6C 61 6E 67 2F 53 ; L...Ljava/lang/S
+		00000060h: 74 72 69 6E 67 3B 01 00 0D 43 6F 6E 73 74 61 6E ; tring;...Constan
+		00000070h: 74 56 61 6C 75 65 08 00 09 01 00 5C 6A 64 62 63 ; tValue.....\jdbc
+		
+	jdk版本号对应关系如下：
+	
+	+---+---+------+
+	|2E |46 |jdk1.2|
+	+---+---+------+
+	|2F |47 |jdk1.3|
+	+---+---+------+
+	|30 |48 |jdk1.4|
+	+---+---+------+
+	|31 |49 |jdk1.5|
+	+---+---+------+
+	|32 |50 |jdk1.6|
+	+---+---+------+
+	|33 |51 |jdk1.7|
+	+---+---+------+
+	|34 |52 |jdk1.8|
+	+---+---+------+
+	
+	
+开启eclipse的代码自动格式化
+=============================
+	Project → Properties →Java Code Style →Formatter

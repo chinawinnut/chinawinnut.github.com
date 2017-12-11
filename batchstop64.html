@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>batchstop64批量停开机程序 &mdash; WingNut 1.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="索引"
+              href="genindex.html"/>
+        <link rel="search" title="搜索" href="search.html"/>
+    <link rel="top" title="WingNut 1.0 文档" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> WingNut
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cplusplus.html">C和C++复习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mysql.html">mysql使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclipse.html">eclipse使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">工具推荐</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">问题排查</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gdbAnddbx.html">gdb与dbx使用简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="myinstall.html">一些软件的安装与使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-unix-command.html">linux/unix 命令</a></li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">我收藏的一些技术网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forums.html">一些技术论坛</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WingNut</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>batchstop64批量停开机程序</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/batchstop64.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="batchstop64">
+<h1>batchstop64批量停开机程序<a class="headerlink" href="#batchstop64" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>基本相关<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>源码目录</dt>
+<dd><p class="first last">acc/batch64/batchstop</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>编译方法</dt>
+<dd><p class="first last">该程序是64位程序，编译前需要设置一下编译环境,运行 <code class="docutils literal"><span class="pre">.</span> <span class="pre">setenv.ksh</span></code> 就好了。
+注意编译的时候make clean，然后make，最后make install</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>部署环境</dt>
+<dd><p class="first last">batchstop64这个程序部署在在226 puar02主机。编译环境也在那上面，不是在216主机。更换程序前注意备份原程序。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>相关配置</dt>
+<dd><p class="first last">在对应主机上的aioss.cfg文件中， <code class="docutils literal"><span class="pre">[BATCHSTOP\LOGGER]</span></code> 一节。主要是日志的。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>程序大体上的执行流程</dt>
+<dd><object data="_images/graphviz-1f579aeebb27b59e905d8da28fc4863d61b62dc8.svg" type="image/svg+xml">
+            <p class="warning">digraph G {
+    rankdir = TB;//BT,TB,LR
+    fontname = &quot;Courier New&quot;
+    fontsize = 8
+    node [ fontname = &quot;Courier New&quot;, fontsize = 10, shape = &quot;record&quot; ];
+    edge [ fontname = &quot;Courier New&quot;, fontsize = 10 ];
+
+    subgraph cluster_1 {
+      nodeA1 [ label = &quot;{&lt;f0&gt; ProcessNode|
+                        &lt;f1&gt; ProcessNodeSequence|
+                        &lt;f2&gt; BatchStopApp}&quot; ];
+      nodeA2 [ label = &quot;{&lt;f0&gt; LoadAccSubsOweDefine|
+                      &lt;f1&gt; LoadAccBatchstopUmsDefine|
+                      &lt;f2&gt; LoadVipCrtApplyCredit|
+                      &lt;f3&gt; LoadVipDelayAccount|
+                      &lt;f4&gt; LoadPhase1|
+                      &lt;f5&gt; BatchStopManager
+                      }&quot; ];
+      nodeA1:&lt;f0&gt; -&gt; nodeA2;
+    };
+
+    subgraph cluster_2 {
+      nodeB1[ label = &quot;{&lt;f0&gt; ProcessNode|
+                      &lt;f1&gt; ProcessNodeParallel|
+                      &lt;f2&gt; LoadPhase1
+                      }&quot; ];
+      nodeB2[ label = &quot;{&lt;f0&gt; LoadUcsAccount|
+                      &lt;f1&gt; LoadUcsSubscription|
+                      &lt;f2&gt; LoadUcsGroupMember|
+                      &lt;f3&gt; LoadUcsSubsRela|
+                      &lt;f4&gt; LoadUcsSubsAttr|
+                      &lt;f5&gt; LoadUcsSubsOtherInfo|
+                      &lt;f6&gt; LoadInfoOweIdentifie|
+                      &lt;f7&gt; LoadGrpCreditRule2Billing|
+                      &lt;f8&gt; LoadBmsGuaranty|
+                      &lt;f9&gt; LoadWOFamilyA
+                      }&quot; ];
+      nodeB1:&lt;f0&gt; -&gt; nodeB2;
+    };
+
+    subgraph cluster_3 {
+      nodeC1[ label = &quot;{&lt;f0&gt; ProcessNode|
+                      &lt;f1&gt; ProcessNodeParallel|
+                      &lt;f2&gt; BatchStopManager
+                      }&quot; ];
+      nodeC2[ label = &quot;{&lt;f0&gt; LoadAccAccountInfo|
+                      &lt;f1&gt; for DealBatchStop
+                      }&quot; ];
+      nodeC1:&lt;f0&gt; -&gt; nodeC2;
+    }
+
+	nodeA2:f4 -&gt; nodeB1:&lt;f2&gt;;
+	nodeA2:&lt;f5&gt; -&gt; nodeC1:&lt;f2&gt;;
+}</p></object>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>欠费批量停机程序处理流程<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><p>由于理解会有不到位的地方，以下的逻辑只是我自己整理的，只能作为参考，一切以源码和实际运行结果为准。其中免催免停的用户会跳过停机。
+停机处理逻辑都在DealBatchStop::procOne这个函数中，每次处理一个账户。
+账户集来自AccAccountInfo，
+<strong>以下是判断流程：</strong></p>
+<ol class="arabic">
+<li><p class="first">判读ucs_account中有无该账户，无则跳过。</p>
+</li>
+<li><p class="first">取ucs_account为theCurrAccount，判断CanStop==1，true则跳过。</p>
+</li>
+<li><p class="first">判断AccountStatus != 1，true则跳过。</p>
+</li>
+<li><p class="first">以下是取账户下的用户，循环处理。</p>
+</li>
+<li><p class="first">判断用户的AcctType是否为2或者是（1并且CreditValue在6到10之间，准预的沃信用分用户），不是则跳过。</p>
+</li>
+<li><p class="first">担保停机：根据subscription_id匹配 <code class="docutils literal"><span class="pre">SELECT</span> <span class="pre">SUBSCRIPTION_ID,</span> <span class="pre">REF_ID,</span> <span class="pre">EFFECT_DATE,</span> <span class="pre">EXPIRE_DATE</span> <span class="pre">FROM</span> <span class="pre">bms_guaranty</span> <span class="pre">WHERE</span> <span class="pre">sysdate</span> <span class="pre">between</span> <span class="pre">effect_date</span> <span class="pre">and</span> <span class="pre">expire_date;</span></code> 的ref_id，不在里面则返回false。继续后续判断。若果担保停机成功，返回true。跳过后续停机。这一块看的不是很明白，无法理解业务为什么这么做。建议问下懂业务的人。</p>
+</li>
+<li><p class="first">开机或半停，继续判断。1001停机且是停机保号或申挂暂停的继续判断，沃信用分6-10的监控停机（包括半停）的继续判断。</p>
+<blockquote>
+<div><p>theCurrSubs-&gt;theSubscriptionId根据theUcsGroupMemberISubscriptionId获取theCurrMember，若theCurrMember！= NULL并且theGroupSvcType == 105(亲情网)，设 theOnlyMobileFlag = false；若theCurrMember != NULL &amp;&amp; theCurrMember-&gt;theGroupSvcType == 109，根据theCurrMember-&gt;theGroupSubsId到theWOFamilyA搜索记录，如果存在则theOnlyMobileFlag = false;</p>
+</div></blockquote>
+</li>
+<li><p class="first">判断theCurrSubs-&gt;theServiceType != 1001 &amp;&amp; theCurrMember != NULL &amp;&amp; theOnlyMobileFlag，成立则跳过该用户（移网可以过去，固网根据上面得到的结果判断），</p>
+<blockquote>
+<div><p>如果theCurrMember是NULL，也继续判断。</p>
+</div></blockquote>
+</li>
+<li><p class="first">根据theCurrSubs-&gt;theSubscriptionId到SELECT SUBSCRIPTION_ID2 FROM ucs_subs_rela WHERE rela = ‘ZFK’ and sysdate between active_time and inactive_time里判断有无记录，没有则继续，有则跳过（不是主副卡往下走）。</p>
+</li>
+<li><p class="first">vip缓停处理模式,0:忽略;1:首次缓停;2:2次缓停;3:缓停用户停机，vip首次和第二次缓停的跳过。</p>
+</li>
+<li><p class="first">如果是1001，且在theUcsSubsAttr有记录，跳过，不处理。</p>
+</li>
+<li><p class="first">在theUcsSubsOtherInfo有记录，跳过，不处理</p>
+</li>
+<li><p class="first">在theInfoOweIdentifie有记录，跳过，不处理</p>
+</li>
+<li><p class="first">不是正式开户，跳过不处理</p>
+</li>
+<li><p class="first">查询用户欠费getOweBalance,失败则跳过.(到ACC_INVOICE根据账号和subscription_id查询)</p>
+</li>
+<li><p class="first">匹配AccSubsOweDefine停机规则表.匹配region_id、customer_type、customer_grpid、AccountGrpId、acct_type、service_type、pay_type、credit_value、theOweAmount，其中一个不匹配就跳过。</p>
+</li>
+<li><p class="first">计算欠费月份,小于规则中的月份数（theOweMonths）则跳过不处理.否则继续.如果循环匹配结束没有匹配的规则，跳过。</p>
+</li>
+<li><p class="first">[6-10]欠费半停停信控半停放过去，其他半停的跳过。</p>
+</li>
+<li><p class="first">跳过信控全停机转欠费半停。</p>
+</li>
+<li><p class="first">停机全停，并且是挂失和保号或信控监控全停的；或者是其他的。进入停机。</p>
+</li>
+<li><p class="first">写acc_account_notify表，写TBL_INTERFACE_STOP_RUN        固网停开机表或SCOUT_BMS_INTERFACE移网停开机表</p>
+</li>
+<li><p class="first">停同一个群组的用户：根据theCurrMember-&gt;theGroupSubsId取同一个群组的用户，跳过当前用户、失效用户、已停机用户（固网停机保号除外），跳过SUBS_STATUS=9用户</p>
+</li>
+<li><p class="first">停担保与被担保的用户</p>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>另一种欠费批量停机程序处理流程方式<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<dl class="docutils">
+<dt>run：</dt>
+<dd><ol class="first arabic">
+<li><dl class="first docutils">
+<dt>装载批量停机规则表acc_subs_owe_define，flag由外部传入，对应theFlag,1:月中 2:月末 3:月末短信提醒</dt>
+<dd><p class="first last">SELECT * acc_subs_owe_define FROM acc_subs_owe_define WHERE flag = :flag&lt;int&gt;  ORDER BY match_pri DESC</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">装载acc_batchstop_ums_define</p>
+</li>
+<li><dl class="first docutils">
+<dt>装载vip_crt_apply_credit</dt>
+<dd><p class="first last">SELECT vip_crt_apply_credit FROM vip_crt_apply_credit WHERE month=TO_CHAR(sysdate,’YYYYMM’)</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">装载vip_crt_apply_credit账户清单(单个)</p>
+</li>
+<li><p class="first">LoadPhase1:</p>
+<blockquote>
+<div><p>ProcessNodeParallel::run.pthread_create
+1.装载ucs_account(单个)</p>
+<p>2.装载ucs_subscription</p>
+<p>3.装载ucs_group_member</p>
+<dl class="docutils">
+<dt>4.装载ucs_subs_rela</dt>
+<dd><p class="first last">select * FROM ucs_subs_rela WHERE rela = ‘ZFK’ and sysdate between active_time and inactive_time</p>
+</dd>
+</dl>
+<p>5.装载ucs_subs_attr:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">ucs_subs_attr</span> <span class="n">WHERE</span> <span class="n">attr_id</span> <span class="o">=</span> <span class="mi">95011</span> <span class="ow">and</span> <span class="n">attr_value</span> <span class="ow">in</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="ow">and</span> <span class="n">to_char</span><span class="p">(</span><span class="n">abs_active_time</span><span class="p">,</span><span class="s1">&#39;yyyymm&#39;</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">to_char</span><span class="p">(</span><span class="n">add_months</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="s1">&#39;yyyymm&#39;</span><span class="p">)</span>
+<span class="ow">and</span> <span class="n">to_char</span><span class="p">(</span><span class="n">abs_inactive_time</span><span class="p">,</span><span class="s1">&#39;yyyymm&#39;</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">to_char</span><span class="p">(</span><span class="n">add_months</span><span class="p">(</span><span class="n">sysdate</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="s1">&#39;yyyymm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>6.装载ucs_subs_other_info</dt>
+<dd><p class="first last">SELECT busi_key FROM ucs_subs_other_info WHERE info_grp_id =’user_credit’ and info_id = ‘1’ And sysdate between active_time and inactive_time</p>
+</dd>
+<dt>7.装载info_owe_identifie</dt>
+<dd><p class="first last">SELECT subscription_id FROM info_owe_identifie WHERE identifie_type = ‘1’ and sysdate between effect_time and expire_time</p>
+</dd>
+<dt>8.装载grp_credit_rule_2_billing</dt>
+<dd><p class="first last">SELECT * FROM grp_credit_rule_2_billing</p>
+</dd>
+<dt>9.装载bms_guaranty</dt>
+<dd><p class="first last">SELECT * FROM bms_guaranty WHERE sysdate between effect_date and expire_date</p>
+</dd>
+</dl>
+<p>10.装载WO_FAMILY_A:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">subscription_id</span> <span class="n">FROM</span> <span class="n">ucs_subs_component</span> <span class="n">WHERE</span> <span class="n">product_type</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">AND</span> <span class="n">sysdate</span> <span class="n">between</span> <span class="n">active_time</span> <span class="ow">and</span> <span class="n">inactive_time</span> <span class="n">AND</span> <span class="n">product_id</span> <span class="n">IN</span> <span class="p">(</span><span class="n">select</span> <span class="n">product_id</span> <span class="kn">from</span> <span class="nn">pm_product_label</span> <span class="n">where</span> <span class="n">pm_label_id</span> <span class="n">like</span> <span class="s1">&#39;WO_FAMILY_A&#39;</span><span class="p">)</span>
+<span class="n">pthread_join</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">,</span><span class="o">&amp;</span><span class="n">prc</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>6.BatchStopManager</p>
+<blockquote class="last">
+<div><p>ProcessNodeParallel::run.pthread_create(RunProcessNode,theNodeVec(it))</p>
+<dl class="docutils">
+<dt>1.装载acc_account_info</dt>
+<dd>SELECT * FROM acc_account_info WHERE unsettled_bill_balance &gt; 1000</dd>
+<dt>2.DealBatchStop:</dt>
+<dd><p class="first">从theAccAccountInfo获取账户信息
+调用procOne:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">pthread_join</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">,</span><span class="o">&amp;</span><span class="n">prc</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>3.保存批量停机处理结果:saveBatch</p>
+</div></blockquote>
+</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h2>涉及的表<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>tbl_interface_stop_run</dt>
+<dd>固网停开机</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>scout_bms_interface</dt>
+<dd>移网停开机</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>acc_subs_owe_define</dt>
+<dd>批量停机规则表，停机规则在这里配置</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>bms_act_rule</dt>
+<dd>营业停开机规则，这张表配置了用户从一种状态转化到另一种状态是否可行，如果没有配置，则转化是不可行的。</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="scoutbatchstop64">
+<h2>沃信用分scout和batchstop64关系<a class="headerlink" href="#scoutbatchstop64" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="35%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">信控半停(3,27)</th>
+<th class="head">信控全停(2,28)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>欠费半停(3,7)</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr class="row-odd"><td>欠费全停(2,4)</td>
+<td>√</td>
+<td>√</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h2>可能存在的问题<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>可能存在的问题:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>        SELECT subscription_id
+  FROM ucs_subs_component
+ WHERE product_type = 1
+   AND sysdate between active_time and inactive_time
+   AND product_id IN (select product_id
+                        from pm_product_label
+                       where pm_label_id like &#39;WO_FAMILY_A&#39;)
+
+以上的sql数据组成theWOFamilyA
+
+SELECT SUBSCRIPTION_ID, GROUP_SUBS_ID, GROUP_SVC_TYPE
+  FROM ucs_group_member
+ WHERE group_svc_type in (&#39;109&#39;, &#39;111&#39;)
+   AND bind_flag = &#39;1&#39;
+   AND ACTIVE_TIME &lt; sysdate
+   AND INACTIVE_TIME &gt; sysdate;
+
+SELECT c.id, a.id,105
+  FROM product_instance a, product_instance_related b, product_instance c
+ WHERE a.product_id = 900502
+   and a.state != &#39;E&#39;
+   and a.id = b.product_instance_id
+   and c.id = b.related_product_instance_id
+   and c.state = &#39;U&#39;
+   and c.del_flag = &#39;1&#39;;
+
+以上两条sql数据组成theUcsGroupMemberISubscriptionId
+theCurrMember = p_member==theApp-&gt;theUcsGroupMemberISubscriptionId.end()?NULL:p_member-&gt;second;
+
+
+theApp-&gt;theWOFamilyA.find( theCurrMember-&gt;theGroupSubsId ) != theApp-&gt;theWOFamilyA.end()
+如果为真，则进入停机逻辑判断，否则跳过。
+
+对应代码：
+if ( theCurrMember != NULL &amp;&amp; theCurrMember-&gt;theGroupSvcType == 109 ) {//在群组
+                        if ( theApp-&gt;theWOFamilyA.find( theCurrMember-&gt;theGroupSubsId ) != theApp-&gt;theWOFamilyA.end() )
+                                theOnlyMobileFlag = false;
+                }
+
+将现网数据导到测试环境，测试中将theCurrMember-&gt;theGroupSubsId改为theCurrMember-&gt;theSubscriptionId 就可以停机了。
+
+------------------------------------------------------------
+SELECT * FROM  ucs_account where account_id = 327247388;
+该账户：
+SELECT SUBSCRIPTION_ID, GROUP_SUBS_ID, GROUP_SVC_TYPE
+  FROM ucs_group_member
+ WHERE group_svc_type in (&#39;109&#39;, &#39;111&#39;)
+   AND bind_flag = &#39;1&#39;
+   AND ACTIVE_TIME &lt; sysdate
+   AND INACTIVE_TIME &gt; sysdate
+   and subscription_id in (320400735,328068633);
+显示GROUP_SVC_TYPE=111;
+代码中对于非1001用户，如果GROUP_SVC_TYPE=105或109，会判断，符合条件会继续走入停机判断，而111直接就没过去。
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; 版权所有 2017, zyj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

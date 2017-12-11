@@ -1,0 +1,224 @@
+batchstop64批量停开机程序
+===========================
+
+基本相关
+---------------
+	* 源码目录
+		acc/batch64/batchstop
+
+	* 编译方法
+		该程序是64位程序，编译前需要设置一下编译环境,运行 ``. setenv.ksh`` 就好了。
+		注意编译的时候make clean，然后make，最后make install
+	
+	* 部署环境
+		batchstop64这个程序部署在在226 puar02主机。编译环境也在那上面，不是在216主机。更换程序前注意备份原程序。
+
+	* 相关配置
+		在对应主机上的aioss.cfg文件中， ``[BATCHSTOP\LOGGER]`` 一节。主要是日志的。
+		
+	* 程序大体上的执行流程
+		.. graphviz:: _static/dotfiles/external.dot
+	
+欠费批量停机程序处理流程
+----------------------------
+	由于理解会有不到位的地方，以下的逻辑只是我自己整理的，只能作为参考，一切以源码和实际运行结果为准。其中免催免停的用户会跳过停机。
+	停机处理逻辑都在DealBatchStop::procOne这个函数中，每次处理一个账户。
+	账户集来自AccAccountInfo，
+	**以下是判断流程：**
+	
+	1. 判读ucs_account中有无该账户，无则跳过。
+	
+	2. 取ucs_account为theCurrAccount，判断CanStop==1，true则跳过。
+	
+	3. 判断AccountStatus != 1，true则跳过。
+	
+	4. 以下是取账户下的用户，循环处理。
+	
+	5. 判断用户的AcctType是否为2或者是（1并且CreditValue在6到10之间，准预的沃信用分用户），不是则跳过。
+	
+	6. 担保停机：根据subscription_id匹配 ``SELECT SUBSCRIPTION_ID, REF_ID, EFFECT_DATE, EXPIRE_DATE FROM bms_guaranty WHERE sysdate between effect_date and expire_date;`` 的ref_id，不在里面则返回false。继续后续判断。若果担保停机成功，返回true。跳过后续停机。这一块看的不是很明白，无法理解业务为什么这么做。建议问下懂业务的人。
+	
+	7. 开机或半停，继续判断。1001停机且是停机保号或申挂暂停的继续判断，沃信用分6-10的监控停机（包括半停）的继续判断。
+		
+		theCurrSubs->theSubscriptionId根据theUcsGroupMemberISubscriptionId获取theCurrMember，若theCurrMember！= NULL并且theGroupSvcType == 105(亲情网)，设 theOnlyMobileFlag = false；若theCurrMember != NULL && theCurrMember->theGroupSvcType == 109，根据theCurrMember->theGroupSubsId到theWOFamilyA搜索记录，如果存在则theOnlyMobileFlag = false;
+		
+	8. 判断theCurrSubs->theServiceType != 1001 && theCurrMember != NULL && theOnlyMobileFlag，成立则跳过该用户（移网可以过去，固网根据上面得到的结果判断），
+	
+		如果theCurrMember是NULL，也继续判断。
+	
+	9. 根据theCurrSubs->theSubscriptionId到SELECT SUBSCRIPTION_ID2 FROM ucs_subs_rela WHERE rela = 'ZFK' and sysdate between active_time and inactive_time里判断有无记录，没有则继续，有则跳过（不是主副卡往下走）。
+	
+	10. vip缓停处理模式,0:忽略;1:首次缓停;2:2次缓停;3:缓停用户停机，vip首次和第二次缓停的跳过。
+	
+	11. 如果是1001，且在theUcsSubsAttr有记录，跳过，不处理。
+
+	12. 在theUcsSubsOtherInfo有记录，跳过，不处理
+	
+	13. 在theInfoOweIdentifie有记录，跳过，不处理
+	
+	14. 不是正式开户，跳过不处理
+	
+	15. 查询用户欠费getOweBalance,失败则跳过.(到ACC_INVOICE根据账号和subscription_id查询)
+	
+	16. 匹配AccSubsOweDefine停机规则表.匹配region_id、customer_type、customer_grpid、AccountGrpId、acct_type、service_type、pay_type、credit_value、theOweAmount，其中一个不匹配就跳过。
+	
+	17. 计算欠费月份,小于规则中的月份数（theOweMonths）则跳过不处理.否则继续.如果循环匹配结束没有匹配的规则，跳过。
+	
+	18. [6-10]欠费半停停信控半停放过去，其他半停的跳过。
+	
+	19. 跳过信控全停机转欠费半停。
+	
+	20. 停机全停，并且是挂失和保号或信控监控全停的；或者是其他的。进入停机。
+	
+	21. 写acc_account_notify表，写TBL_INTERFACE_STOP_RUN	固网停开机表或SCOUT_BMS_INTERFACE移网停开机表
+	
+	22. 停同一个群组的用户：根据theCurrMember->theGroupSubsId取同一个群组的用户，跳过当前用户、失效用户、已停机用户（固网停机保号除外），跳过SUBS_STATUS=9用户
+	
+	23. 停担保与被担保的用户
+	
+另一种欠费批量停机程序处理流程方式
+----------------------------------
+run：
+	1. 装载批量停机规则表acc_subs_owe_define，flag由外部传入，对应theFlag,1:月中 2:月末 3:月末短信提醒
+		SELECT * acc_subs_owe_define FROM acc_subs_owe_define WHERE flag = :flag<int>  ORDER BY match_pri DESC
+		
+	2. 装载acc_batchstop_ums_define
+		
+	3. 装载vip_crt_apply_credit
+		SELECT vip_crt_apply_credit FROM vip_crt_apply_credit WHERE month=TO_CHAR(sysdate,'YYYYMM')
+		
+	4. 装载vip_crt_apply_credit账户清单(单个)
+	
+	5. LoadPhase1:
+		
+		ProcessNodeParallel::run.pthread_create
+		1.装载ucs_account(单个)
+			
+		2.装载ucs_subscription
+		
+		3.装载ucs_group_member
+		
+		4.装载ucs_subs_rela
+			select * FROM ucs_subs_rela WHERE rela = 'ZFK' and sysdate between active_time and inactive_time
+			
+		5.装载ucs_subs_attr::
+		
+			select * FROM ucs_subs_attr WHERE attr_id = 95011 and attr_value in(1,2,4) 
+			and to_char(abs_active_time,'yyyymm')<=to_char(add_months(sysdate,-1),'yyyymm') 
+			and to_char(abs_inactive_time,'yyyymm')>=to_char(add_months(sysdate,-1),'yyyymm')
+			
+		6.装载ucs_subs_other_info
+			SELECT busi_key FROM ucs_subs_other_info WHERE info_grp_id ='user_credit' and info_id = '1' And sysdate between active_time and inactive_time
+			
+		7.装载info_owe_identifie
+			SELECT subscription_id FROM info_owe_identifie WHERE identifie_type = '1' and sysdate between effect_time and expire_time
+			
+		8.装载grp_credit_rule_2_billing
+			SELECT * FROM grp_credit_rule_2_billing
+			
+		9.装载bms_guaranty
+			SELECT * FROM bms_guaranty WHERE sysdate between effect_date and expire_date
+			
+		10.装载WO_FAMILY_A::
+		
+			SELECT subscription_id FROM ucs_subs_component WHERE product_type = 1 AND sysdate between active_time and inactive_time AND product_id IN (select product_id from pm_product_label where pm_label_id like 'WO_FAMILY_A')
+			pthread_join(*it,&prc);
+	
+	6.BatchStopManager
+			
+			ProcessNodeParallel::run.pthread_create(RunProcessNode,theNodeVec(it))
+			
+			1.装载acc_account_info
+				SELECT * FROM acc_account_info WHERE unsettled_bill_balance > 1000
+			
+			2.DealBatchStop:
+				从theAccAccountInfo获取账户信息
+				调用procOne::
+		
+					pthread_join(*it,&prc);
+		
+			3.保存批量停机处理结果:saveBatch
+		
+涉及的表
+---------
+	* tbl_interface_stop_run
+		固网停开机
+		
+	* scout_bms_interface
+		移网停开机		
+	
+	* acc_subs_owe_define
+		批量停机规则表，停机规则在这里配置
+		
+	* bms_act_rule
+		营业停开机规则，这张表配置了用户从一种状态转化到另一种状态是否可行，如果没有配置，则转化是不可行的。
+		
+沃信用分scout和batchstop64关系
+---------------------------------
+		+--------------+----------------+----------------+
+		|              | 信控半停(3,27) | 信控全停(2,28) |
+		+==============+================+================+
+		| 欠费半停(3,7)| √              | ×              |
+		+--------------+----------------+----------------+
+		| 欠费全停(2,4)| √              | √              |
+		+--------------+----------------+----------------+
+
+
+可能存在的问题
+----------------
+可能存在的问题::
+
+		SELECT subscription_id
+	  FROM ucs_subs_component
+	 WHERE product_type = 1
+	   AND sysdate between active_time and inactive_time
+	   AND product_id IN (select product_id
+	                        from pm_product_label
+	                       where pm_label_id like 'WO_FAMILY_A')
+	                       
+	以上的sql数据组成theWOFamilyA
+	
+	SELECT SUBSCRIPTION_ID, GROUP_SUBS_ID, GROUP_SVC_TYPE
+	  FROM ucs_group_member
+	 WHERE group_svc_type in ('109', '111')
+	   AND bind_flag = '1'
+	   AND ACTIVE_TIME < sysdate
+	   AND INACTIVE_TIME > sysdate;
+	
+	SELECT c.id, a.id,105
+	  FROM product_instance a, product_instance_related b, product_instance c
+	 WHERE a.product_id = 900502
+	   and a.state != 'E'
+	   and a.id = b.product_instance_id
+	   and c.id = b.related_product_instance_id
+	   and c.state = 'U'
+	   and c.del_flag = '1';
+	   
+	以上两条sql数据组成theUcsGroupMemberISubscriptionId
+	theCurrMember = p_member==theApp->theUcsGroupMemberISubscriptionId.end()?NULL:p_member->second;
+	
+	
+	theApp->theWOFamilyA.find( theCurrMember->theGroupSubsId ) != theApp->theWOFamilyA.end() 
+	如果为真，则进入停机逻辑判断，否则跳过。
+	
+	对应代码：
+	if ( theCurrMember != NULL && theCurrMember->theGroupSvcType == 109 ) {//在群组
+				if ( theApp->theWOFamilyA.find( theCurrMember->theGroupSubsId ) != theApp->theWOFamilyA.end() ) 
+					theOnlyMobileFlag = false;
+			}
+			
+	将现网数据导到测试环境，测试中将theCurrMember->theGroupSubsId改为theCurrMember->theSubscriptionId 就可以停机了。
+	
+	------------------------------------------------------------
+	SELECT * FROM  ucs_account where account_id = 327247388;
+	该账户：
+	SELECT SUBSCRIPTION_ID, GROUP_SUBS_ID, GROUP_SVC_TYPE
+	  FROM ucs_group_member
+	 WHERE group_svc_type in ('109', '111')
+	   AND bind_flag = '1'
+	   AND ACTIVE_TIME < sysdate
+	   AND INACTIVE_TIME > sysdate
+	   and subscription_id in (320400735,328068633);
+	显示GROUP_SVC_TYPE=111;
+	代码中对于非1001用户，如果GROUP_SVC_TYPE=105或109，会判断，符合条件会继续走入停机判断，而111直接就没过去。
+		

@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>linux/unix 命令 &mdash; WingNut 1.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="索引"
+              href="genindex.html"/>
+        <link rel="search" title="搜索" href="search.html"/>
+    <link rel="top" title="WingNut 1.0 文档" href="index.html"/>
+        <link rel="next" title="我收藏的一些技术网站" href="collections.html"/>
+        <link rel="prev" title="一些软件的安装与使用" href="myinstall.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> WingNut
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cplusplus.html">C和C++复习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mysql.html">mysql使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclipse.html">eclipse使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">工具推荐</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">问题排查</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gdbAnddbx.html">gdb与dbx使用简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="myinstall.html">一些软件的安装与使用</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">linux/unix 命令</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aix">Aix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linux">Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">我收藏的一些技术网站</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forums.html">一些技术论坛</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WingNut</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>linux/unix 命令</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/linux-unix-command.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux-unix">
+<h1>linux/unix 命令<a class="headerlink" href="#linux-unix" title="永久链接至标题">¶</a></h1>
+<div class="section" id="aix">
+<h2>Aix<a class="headerlink" href="#aix" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>truss</dt>
+<dd><p class="first last">命令跟踪一个进程的系统调用、所接收的信号以及招致的机器错。要检查的应用程序可在truss命令的命令行中指定，也可将truss命令挂在一个或多个已经在运行的进程上。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>topas</dt>
+<dd><p class="first last">命令用于监控各种系统资源，如CPU的使用情况，CPU事件和队列，内存和换页空间的使用，磁盘性能，网络性能以及NFS统计等。它还会报告指派给不同WLM类的进程对系统资源的消耗情况。它还能报告系统中最热门的进程和工作量管理器（WLM）的热门类。有关WLM类信息只有在WLM激活时才会显示。topas命令将热门进程定义为那些使用大量CPU时间的进程。topas命令没有作日志的选项，所有信息都是实时的。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>sar</dt>
+<dd><p class="first">命令报告CPU的使用情况，I/O以及其它系统行为。sar命令可以收集，报告以及保存系统行为信息。如果没有指定输入文件，则sar调用sarc命令访问系统数据。</p>
+<p>用户可用让cron命令运行两个shell脚本（/usr/lib/sa/sa1和/usr/lib/sa2）以提供日统计和报表。在crontab文件/var/spool/cron/crontabs/adm中包括了一些样本节，用于示范cron要在何时运行这些shell脚本。以这种方式收集到的数据对于确定系统的时间周期特征和决定峰值使用时间是有用的。</p>
+<p class="last">但要注意的是，sar命令自己运行时会产生相当数量的读写。因此最好在没有工作量的情况下运行sar统计，看看sar对总的统计数字有多大的影响。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>vmstat</dt>
+<dd><p class="first">命令报告关于核心线程，虚拟内存，自陷（trap），磁盘以及CPU行为的统计。而且每种行为报告都被更细致地用百分比分别表示用户态、核态、空闲以及等待磁盘I/O等情况。</p>
+<p>内核维持了对核心线程，换页以及中断行为的统计数据，而vmstat命令则通过使用knlist子程序和/dev/kmen伪设备驱动器访问这些数据。磁盘的输入/输出统计是通过设备驱动器维持的。对于磁盘，平均传输速度是通过使用活跃时间核传输信息数目决定的。而活跃时间百分比则是从报告期间驱动器忙的时间量计算出来的。</p>
+<p>vmstat命令产生五种类型的报告：</p>
+<p>· 虚存行为报告</p>
+<p>· fork子进程情况报告</p>
+<p>· 每个设备产生的中断情况报告</p>
+<p>· 汇总报告</p>
+<p class="last">· 输入/输出行为报告</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="linux">
+<h2>Linux<a class="headerlink" href="#linux" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>删除海量文件</dt>
+<dd><p class="first">通常某个目录下文件过多，直接用rm命令会失败，不过用这个组合就可以了:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">|</span><span class="n">grep</span> <span class="n">匹配关键词</span><span class="o">|</span><span class="n">xargs</span> <span class="n">rm</span> <span class="o">-</span><span class="n">f</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">sftp</p>
+</li>
+<li><p class="first">nm</p>
+</li>
+<li><p class="first">objdump</p>
+</li>
+<li><p class="first">objcopy</p>
+</li>
+<li><p class="first">ldd</p>
+</li>
+<li><p class="first">tee</p>
+</li>
+<li><p class="first">tcpdump</p>
+</li>
+<li><p class="first">netstat</p>
+</li>
+<li><p class="first">lsof</p>
+</li>
+<li><p class="first">ipcs</p>
+</li>
+<li><p class="first">ipcrm</p>
+</li>
+<li><p class="first">ps -ef | grep defunct</p>
+<blockquote>
+<div><p>查看僵死进程</p>
+</div></blockquote>
+</li>
+<li><p class="first">egrep</p>
+</li>
+<li><p class="first">kill</p>
+</li>
+<li><p class="first">diff</p>
+<blockquote>
+<div><p>比较两个文件，-u 选项可以以+-形式显示</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="collections.html" class="btn btn-neutral float-right" title="我收藏的一些技术网站" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="myinstall.html" class="btn btn-neutral" title="一些软件的安装与使用" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; 版权所有 2017, zyj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

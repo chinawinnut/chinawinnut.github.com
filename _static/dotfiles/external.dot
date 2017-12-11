@@ -1,0 +1,54 @@
+digraph G {
+    rankdir = TB;//BT,TB,LR
+    fontname = "Courier New"
+    fontsize = 8
+    node [ fontname = "Courier New", fontsize = 10, shape = "record" ];
+    edge [ fontname = "Courier New", fontsize = 10 ];
+
+    subgraph cluster_1 {
+      nodeA1 [ label = "{<f0> ProcessNode|
+                        <f1> ProcessNodeSequence|
+                        <f2> BatchStopApp}" ];
+      nodeA2 [ label = "{<f0> LoadAccSubsOweDefine|
+                      <f1> LoadAccBatchstopUmsDefine|
+                      <f2> LoadVipCrtApplyCredit|
+                      <f3> LoadVipDelayAccount|
+                      <f4> LoadPhase1|
+                      <f5> BatchStopManager
+                      }" ];
+      nodeA1:<f0> -> nodeA2;
+    };
+
+    subgraph cluster_2 {
+      nodeB1[ label = "{<f0> ProcessNode|
+                      <f1> ProcessNodeParallel|
+                      <f2> LoadPhase1
+                      }" ];
+      nodeB2[ label = "{<f0> LoadUcsAccount|
+                      <f1> LoadUcsSubscription|
+                      <f2> LoadUcsGroupMember|
+                      <f3> LoadUcsSubsRela|
+                      <f4> LoadUcsSubsAttr|
+                      <f5> LoadUcsSubsOtherInfo|
+                      <f6> LoadInfoOweIdentifie|
+                      <f7> LoadGrpCreditRule2Billing|
+                      <f8> LoadBmsGuaranty|
+                      <f9> LoadWOFamilyA
+                      }" ];
+      nodeB1:<f0> -> nodeB2;
+    };
+
+    subgraph cluster_3 {
+      nodeC1[ label = "{<f0> ProcessNode|
+                      <f1> ProcessNodeParallel|
+                      <f2> BatchStopManager
+                      }" ];
+      nodeC2[ label = "{<f0> LoadAccAccountInfo|
+                      <f1> for DealBatchStop
+                      }" ];
+      nodeC1:<f0> -> nodeC2;
+    }
+
+	nodeA2:f4 -> nodeB1:<f2>;
+	nodeA2:<f5> -> nodeC1:<f2>;
+}

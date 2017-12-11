@@ -1,0 +1,226 @@
+问题排查
+==========
+**可以自己先查一下**
+
+相关baf调不到：
+---------------
+	可能在相关tcl文件中没有加载新增的库(如果新的baf在新增加的库中)，解决办法是bms.tcl，acct.tcl，unif_bms.tcl中加上加载新库的语句，不要漏掉主机。
+	
+编写代码注意:
+--------------
+	千万不要在反斜杠接下来一行写代码。主要针对这种写法
+	
+	//some comments。\\
+	
+	int a;
+
+	实际编译的时候会把int a给注释掉的。
+	
+表不存在
+------------------------
+
+把Bms_Action_Batch里面的baf拿出来拼成下面的串，单个在后台跑。然后看屏幕输出，或后
+台日志（bms.log或acct.log）,这次的例子正好就可以如此解决::
+
+	Fee_Einvoice_Print_Receipt {COMM_INFO {BUSI_CODE 120150} {REGION_ID A} {COUNTY_ID A00} {OFFICE_ID J01} {OPERATOR_ID AIQA27} {CHANNEL A2} {OP_MODE SUBMIT} {FIRST_DEV_OPER J01} {SECOND_DEV_OPER AIQA27} {SYSTEM BSS}} {{PRINT_FLAG 1} {KPXT 01} {GMF_MC 张森淼} {FYZE 40.00} {OTHER_INFO 账户编号：301790170|账期：201608|账单总费用：40.00|应付金额：40.0} {REGION_ID A} {FEE_LIST {{通信服务费 40.00}}} {BUSI_CODE 120150} {SERVICE_NUM {18601721776 }} {SUBSCRIPTION_ID 301866008} {ACCOUNT_ID 301790170}}
+	New_accPrintLog {COMM_INFO {BUSI_CODE 120150} {REGION_ID A} {COUNTY_ID A00} {OFFICE_ID J01} {OPERATOR_ID AIQA27} {CHANNEL A2} {OP_MODE SUBMIT} {FIRST_DEV_OPER J01} {SECOND_DEV_OPER AIQA27} {SYSTEM BSS}} {{BILL_TYPE 1} {PRINT_MODE 1} {TIMES_ADD 1} {PRINT_LOG_LIST { {  {} 72099957 {}  {} 301790170 20170301 201609 3697239708 40000 50 {}  0 {}  300000644 1 A  {}  {}  {}  {}  } }}}
+
+后台跑串方法，35主机，进etc目录，输入tclsh，输入营业：source bms.tcl（或账管acct.tcl），
+将上面的串贴进去，跑一下，看屏幕报什么错，如果没法确定，再去log目录下找后台日志看一下。这次报错我在后台找到这些，是New_accPrintLog报的。
+错误日志::
+
+	Mar  2 09:15:38.096 2017@<local_host>@4325508@LM_ERROR@BMS|[BILLMGR-1003] AIDB SQLException: OracleError::942 - ORA-00942: **table or view does not exist**
+	SQL: INSERT INTO ACC_PRINT_LOG_201703 ( SERIAL_CODE,SUBSCRIPTION_ID,BATCH_CODE,PAY_SERIAL_CODE,BUSINESS_CODE,ACCOUNT_ID,VALUE_DATE,CYCLE_MONTH,INVOICE_SEQ,AGAINST_FUND_AMOUNT,TOTAL_AMOUNT,BILL_TEMPLATE_ID,INVOICE_NO,STATUS,LAST_STATUS_DATE,CUSTOMER_ID,CUSTOMER_TYPE,REGION_ID,OPERATOR_ID,OFFICE_ID,CREATE_TIME,REMARK,CHANNEL_ID,KEY_SOURCE_TYPE_CD,bill_type,print_mode,times_add )  VALUES ( :f1,:f2,:f3,:f4,:f5,:f6,:f7,:f8,:f9,:f10,:f11,:f12,:f13,:f14,:f15,:f16,:f17,:f18,:f19,:f20,:f21,:f22,:f23,:f24,:f25,:f26,:f27 ) 
+	Mar  2 09:15:38.096 2017@<local_host>@4325508@LM_DEBUG@BMS|[TIMER_INFO] (execute) done, time_used = 0.292296 .........
+	Mar  2 09:15:38.097 2017@<local_host>@4325508@LM_ERROR@BMS|BMS-2002 BMS异常 ACC_PRINT_LOG_201703:insert错误
+	File: accBillManage.cpp, Line#: 8768, Compiled DateTime: 17:24:59 Jan 11 2017
+	Mar  2 09:15:38.097 2017@<local_host>@4325508@LM_DEBUG@BMS|Performing Transaction ROLLBACK...
+	Mar  2 09:15:38.098 2017@<local_host>@4325508@LM_INFO@BMS|BMS-1002 事务出口 New_accPrintLog
+	Mar  2 09:28:42.230 2017@<local_host>@4325508@LM_INFO@BMS|[BMS] 停止于Thu Mar  2 2017 09:28:42.230918
+
+这句告诉我们表不存在::
+
+	AIDB SQLException: OracleError::942 - ORA-00942: table or view does not exist
+	
+到plsql找，营业库发现没有ACC_PRINT_LOG_201703，但有ACC_PRINT_LOG_201702，再到账务库，发现ACC_PRINT_LOG_201703是有的，说明这张表没建同义词。
+问题找到了，在营业建一下这张表的同义词就可以了。
+
+入参接收说明
+------------------------
+
+通常老的baf不会有什么问题（只有新开发时除外），遇到的基本上是表或者入参的问题。
+这时如果有需求的开发文档，看一下对baf的出入参要求，没有的话，如果后台忙没空帮
+你看，你可以取35主机的src目录找到baf源码，看一下里面的出入参要求::
+
+	BMS_DEF_INT，BMS_DEF_STR  通常外部不传会有默认值
+	BMS_DEF_INT2，BMS_DEF_STR2 通常外部不传会有默认值，也可以接收上一个baf的出参
+	BMS_REQUIRE_DOUBLE2		必传，或从上个baf获取参数
+	BMS_REQUIRE_DOUBLE	必传
+
+报错以提示代码所在
+------------------------
+
+另外，报错处File: accBillManage.cpp, Line#: 8768, 这种的，可以到代码处看看，可能很明显就看出问题所在了。
+先切到bms或acc目录，不行切到src，再搜索代码的语句是::
+
+	find . -name "*.cc"|xargs grep -rn "xxxx"
+	find . -name "*.cpp"|xargs grep -rn "xxxx"
+	find . -name "*.h"|xargs grep -rn "xxxx"
+
+baf串有没有拼错
+------------------------
+
+拼baf串时注意是否有拼错，可以在ultraedit中选中大括号，用ctrl+b匹配
+
+产品订购变更
+------------------------
+
+日志所报错误::
+
+	BMS-2002 BMS  bad argument #2 to 'format' (string expected, got nil)
+	File: bmsRule.cpp, Line#: 78, Compiled DateTime: 14:23:41 Jun 20 20
+
+这个错误是很有可能由于用户没有主产品，可以看下表中记录。这种错误基本是在营业规则校验是发生，需要找到对应的规则公式。临时的解决方法是更换BUSI_CODE，遇到时可以改一下再试试。
+
+还有后台开发还有好几位，一般如果是哪位开发的，你让他查会快些，但如果他没空，你可以试着让别人帮你看看。
+
+以下是给后台开发的
+---------------------
+
+编译时报::
+
+	"bmsAux.cpp", line 6729.33: 1540-0063 (S) The text "res" is unexpected.
+
+通常是上一行代码没有加";"，分号没有加导致。
+
+编译时报::
+
+	BMS-2001 OSS Variant type cast error
+
+通常是类型转换错误，多加些打印语句，就可以定位到相应代码。
+有可能是你的 ``stat<<value`` 之类的语句顺序写错，导致运行时传入的值类型不匹配。
+
+报baf找不到：那要看下自己的baf有没有拼错，比如Fee_Einvoice_Print_Receipt {拼成Fee_Einvoice_Print_Receipt{，
+把大括号和baf连到一起了，那自然在内存中找不到该baf。
+或者有没有注册（你知道的），或者头文件有没有加声明。或者bms.tcl/acct.tcl中有没有吧baf所在的lib库load进去。
+或者编译链接时有没有漏掉什么。
+
+还有一种感觉应该落表的，但是没落表，感觉应该搜到的，没搜到。看一下语句的入参问题。
+后台写::
+
+	stat.prepare("insert into ucs_subscription where ucs_subscription_id = :f2 and credit_value = :f1")
+	stat<<credit_value;
+	stat<<subs_id;
+
+以上语句问题在于以为入参和：:f1 :f2对应，其实不是，只跟语句中的位置有关，写在前面的要先入参，后面的后入。
+
+
+AIX上，linux没试过，不过基本一样（最好自己再验证一下）
+int32	可以表示10进制数有效9位长度。
+int64	可以表示10进制数有效19位长度。
+
+后台开发尽量用int32，或int64，
+double之类的不小心容易出错。比如if(0.000001 == 0)很可能是成立的。
+
+对于::
+
+	int64 a = 99999999999;
+	int64 b = 9999999*10000+100;
+
+最后显示a,b都不是所想的值得问题，是因为右侧的值（我猜测）在编译阶段就当做正常的数处理，也就是int。这时候的结果已经溢出，所以赋给左侧时得到的不是想要的值。编译时通常会报一个out of range警告。
+
+改正方法是::
+
+	int64 a = 9999999;
+	a *= 10000+100;
+	
+这样应该就没问题了。
+或者 int64 a = 99999999999L;这样写，没试过，可能行。
+
+有时候报插表出错，很可能是某个值不对，那就加cout语句，把值都打印出来，看看那个不对。这样基本能定位到。
+
+
+对于 类似 ``basic_string Construct`` 这种字样的错误，很可能是初始化string对象时出错，比如::
+
+	string str1=0；
+	string str2(NULL);
+	string str3(0);
+
+这3种都是错误的，正确的写法是::
+
+	string str4;
+	string str5("");
+ 	string str6("0");
+	string str7 = "0";
+	string str8 = "";
+
+网络方面的问题
+---------------
+
+可能遇到字节序的问题，网络字节序是BigEndian，PowerPc处理器是BigEndian，x86系列是LittleEndian，
+程序在从AIX迁移到linux主机时，如果不是用跨平台的框架写的就很可能遇到字节序的问题。这个时候把收到的
+内容以16进制方式打印出来，对比下，可以判断是不是这类问题。
+
+
+另外程序迁移时还有可能遇到字符集转换的问题，比如使用了iconv库，需要注意。
+
+shell脚本的问题
+-----------------
+脚本不能执行，请检查是否加了可执行权限，编码是否是unix格式的
+
+自己测试时跑没问题，但配成crontab或实时运行时却没有正确结果，那看一下别的crontab怎么配置的，基本上是没有加上
+. .profile或. bash_profile。这是由于这几个文件在窗口前这个会话是有效的，当在后台跑时，对于程序来说这些文件中的
+环境变量没有生效。
+
+core的原因1、2
+---------------
+* 原因1
+
+对于core文件中有~destructor析构之类的报错：
+需要查看对应类中是否有数组指针，对于
+delete [] p;之类的core，很可能是在代码运行中把数组前后一部分内存给覆盖了。导致delete时需要的有关该数组的信息没了。
+
+* 原因2
+
+另外一种是显式调用析构函数，例如::
+
+	{
+		bmsTimer mytimer("hello");
+		/*代码*/
+		mytimer.~bmsTimer();
+	}
+
+bmsTimer中有指向构造时向系统申请的堆空间，显式析构时会释放一次，但编译器会在代码块结束时隐式调用析构函数一次，导致重复析构。
+所以对于显式调用析构，一定要小心，而且这种写法基本是错的。
+如果必须要在某处析构，可以修改这个对象放的作用域::
+
+	{
+		bmsTimer mytimer("hello");
+		/*代码*/
+		//mytimer.~bmsTimer();
+	}
+
+core的原因3、4、5、6
+----------------------------
+* 原因3:
+	空指针解引用。代码里编写的时候没有判断函数返回指针是否为空，或运行过程中代码可能赋值指针为空。对于aix，这个基本不报错，但到了linux上是就直接core了。
+
+* 原因4::
+
+	strcpy(dst,src)如果是数组拷贝，越界了也会core
+
+* 原因5:
+	使用ACE的日志，相关路径中的目录不存在，分析core文件是见到ACE、Log字样时可以考虑建一下相关目录(如果不存在的话)。或许就解决了。
+	
+* 原因6:
+	头文件中的类定义有变化，但相关的cpp文件没有重编，有可能导致程序运行core掉。解决办法是重编相关目录，直接make clean&&make
+
+bms.tcl加载时报coredump
+用gdb查看core文件，发现在库的初始化函数的第一行代码就挂了，最后回退代码，在一个文件一个文件更新编译，发现是某个库有问题。
+猜测出现这种现象，是生成的某个库有问题，导致链接他的库都有问题。但是aix上没有，linux上有。
+
+解决问题的办法主要有：
+	* printf、cout
+	* 打日志（针对daemon之类的守护进程）
+	* core文件分析
+	* 此外就是基础知识与经验与对代码、业务的熟悉程度了，多种手段结合。
